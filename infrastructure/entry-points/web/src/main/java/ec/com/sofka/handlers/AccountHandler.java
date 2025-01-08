@@ -1,12 +1,15 @@
 package ec.com.sofka.handlers;
 
-import ec.com.sofka.*;
-import ec.com.sofka.request.CreateAccountRequest;
+import ec.com.sofka.commands.CreateAccountCommand;
+import ec.com.sofka.commands.usecases.CreateAccountUseCase;
+import ec.com.sofka.commands.usecases.DeleteAccountUseCase;
+import ec.com.sofka.commands.usecases.UpdateAccountUseCase;
 import ec.com.sofka.data.RequestDTO;
 import ec.com.sofka.data.ResponseDTO;
-import ec.com.sofka.request.DeleteAccountRequest;
-import ec.com.sofka.request.GetAccountRequest;
-import ec.com.sofka.request.UpdateAccountRequest;
+import ec.com.sofka.queries.query.GetAccountQuery;
+import ec.com.sofka.commands.UpdateAccountCommand;
+import ec.com.sofka.queries.usecases.GetAccountByNumberUseCase;
+import ec.com.sofka.queries.usecases.GetAllAccountsUseCase;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,7 +32,7 @@ public class AccountHandler {
 
     public ResponseDTO createAccount(RequestDTO request){
         var response = createAccountUseCase.execute(
-                new CreateAccountRequest(
+                new CreateAccountCommand(
                         request.getAccountNum(),
                         request.getName(),
                         request.getBalance()
@@ -44,8 +47,8 @@ public class AccountHandler {
     }
 
     public List<ResponseDTO> getAllAccounts(){
-        var response = getAllAccountsUseCase.get();
-        return response.stream()
+        var response = getAllAccountsUseCase.get(new GetAccountQuery());
+        return response.getMultipleResults().stream()
                 .map(accountResponse -> new ResponseDTO(
                         accountResponse.getCustomerId(),
                         accountResponse.getAccountId(),
@@ -58,11 +61,12 @@ public class AccountHandler {
     }
 
     public ResponseDTO getAccountByNumber(RequestDTO request){
-        var response = getAccountByNumberUseCase.execute(
-                new GetAccountRequest(
+        var response = getAccountByNumberUseCase.get(
+                new GetAccountQuery(
                         request.getCustomerId(),
                         request.getAccountNum()
-                ));
+                )).getSingleResult().get();
+
         return new ResponseDTO(
                 response.getCustomerId(),
                 response.getAccountId(),
@@ -74,7 +78,7 @@ public class AccountHandler {
 
     public ResponseDTO updateAccount(RequestDTO request){
         var response = updateAccountUseCase.execute(
-                new UpdateAccountRequest(
+                new UpdateAccountCommand(
                         request.getCustomerId(),
                         request.getBalance(),
                         request.getAccountNum(),
@@ -94,7 +98,7 @@ public class AccountHandler {
 
     public ResponseDTO deleteAccount(RequestDTO request){
         var response = deleteAccountUseCase.execute(
-                new UpdateAccountRequest(
+                new UpdateAccountCommand(
                         request.getCustomerId(),
                         request.getBalance(),
                         request.getAccountNum(),

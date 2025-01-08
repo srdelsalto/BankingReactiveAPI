@@ -1,16 +1,18 @@
-package ec.com.sofka;
+package ec.com.sofka.queries.usecases;
 
 import ec.com.sofka.aggregate.Customer;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.generics.interfaces.IUseCaseGet;
-import ec.com.sofka.responses.GetAccountResponse;
+import ec.com.sofka.generics.utils.QueryResponse;
+import ec.com.sofka.queries.query.GetAccountQuery;
+import ec.com.sofka.queries.responses.GetAccountResponse;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GetAllAccountsUseCase implements IUseCaseGet<GetAccountResponse> {
+public class GetAllAccountsUseCase implements IUseCaseGet<GetAccountQuery, GetAccountResponse> {
 
     private final IEventStore eventRepository;
 
@@ -19,7 +21,7 @@ public class GetAllAccountsUseCase implements IUseCaseGet<GetAccountResponse> {
     }
 
     @Override
-    public List<GetAccountResponse> get() {
+    public QueryResponse<GetAccountResponse> get(GetAccountQuery query) {
         //Get all events
         List<DomainEvent> events = eventRepository.findAllAggregates();
 
@@ -40,16 +42,18 @@ public class GetAllAccountsUseCase implements IUseCaseGet<GetAccountResponse> {
                 .toList();
 
         //------ Finally I can return the response
-        return customers.stream()
+        return QueryResponse.ofMultiple(
+                customers.stream()
                 .map(customer -> new GetAccountResponse(
-                        customer.getId().getValue(),
-                        customer.getAccount().getId().getValue(),
-                        customer.getAccount().getNumber().getValue(),
-                        customer.getAccount().getName().getValue(),
-                        customer.getAccount().getBalance().getValue(),
-                        customer.getAccount().getStatus().getValue()
+                                customer.getId().getValue(),
+                                customer.getAccount().getId().getValue(),
+                                customer.getAccount().getNumber().getValue(),
+                                customer.getAccount().getName().getValue(),
+                                customer.getAccount().getBalance().getValue(),
+                                customer.getAccount().getStatus().getValue()
                         )
-                ).collect(Collectors.toList());
+                ).collect(Collectors.toList())
+        );
     }
 
 }

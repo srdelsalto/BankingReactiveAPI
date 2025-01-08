@@ -1,4 +1,4 @@
-package ec.com.sofka.responses;
+package ec.com.sofka.queries.responses;
 
 import java.math.BigDecimal;
 

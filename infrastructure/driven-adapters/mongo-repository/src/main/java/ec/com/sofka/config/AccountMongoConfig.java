@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@Configuration
+/*@Configuration
 @EnableMongoRepositories(basePackages = "ec.com.sofka.database.account",
-       mongoTemplateRef = "accountMongoTemplate")
+       mongoTemplateRef = "accountMongoTemplate")*/
 public class AccountMongoConfig {
-    @Primary
+   /* @Primary
     @Bean(name = "accountsDatabaseFactory")
     public MongoDatabaseFactory accountsDatabaseFactory(
             @Value("${spring.data.mongodb.accounts-uri}") String uri) {
@@ -26,5 +26,5 @@ public class AccountMongoConfig {
     @Bean(name = "accountMongoTemplate")
     public MongoTemplate accountsMongoTemplate(@Qualifier("accountsDatabaseFactory") MongoDatabaseFactory accountsDatabaseFactory) {
         return new MongoTemplate(accountsDatabaseFactory);
-    }
+    }*/
 }

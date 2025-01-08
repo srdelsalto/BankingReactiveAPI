@@ -1,10 +1,10 @@
 package ec.com.sofka.generics.utils;
 
 //10. Generics creation to apply DDD: Request - Abstract class to generate request/commands
-public abstract class Request {
+public abstract class Query {
     private final String aggregateId;
 
-    protected Request(String aggregateId) {
+    protected Query(String aggregateId) {
         this.aggregateId = aggregateId;
     }
 

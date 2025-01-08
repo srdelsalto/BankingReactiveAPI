@@ -18,12 +18,12 @@ public class EventMongoAdapter implements IEventStore {
 
     private final IEventMongoRepository repository;
     private final JSONMap mapper;
-    private final MongoTemplate eventMongoTemplate;
+   // private final MongoTemplate eventMongoTemplate;
 
-    public EventMongoAdapter(IEventMongoRepository repository, JSONMap mapper, @Qualifier("eventMongoTemplate")MongoTemplate eventMongoTemplate) {
+    public EventMongoAdapter(IEventMongoRepository repository, JSONMap mapper/*, @Qualifier("eventMongoTemplate")MongoTemplate eventMongoTemplate*/) {
         this.repository = repository;
         this.mapper = mapper;
-        this.eventMongoTemplate = eventMongoTemplate;
+       // this.eventMongoTemplate = eventMongoTemplate;
     }
 
     @Override

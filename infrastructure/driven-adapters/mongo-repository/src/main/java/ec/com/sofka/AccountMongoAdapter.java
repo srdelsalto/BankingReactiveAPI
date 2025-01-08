@@ -16,11 +16,11 @@ import java.util.List;
 public class AccountMongoAdapter implements AccountRepository {
 
     private final IMongoRepository repository;
-    private final MongoTemplate accountMongoTemplate;
+    //private final MongoTemplate accountMongoTemplate;
 
-    public AccountMongoAdapter(IMongoRepository repository, @Qualifier("accountMongoTemplate")  MongoTemplate accountMongoTemplate) {
+    public AccountMongoAdapter(IMongoRepository repository/*, @Qualifier("accountMongoTemplate")  MongoTemplate accountMongoTemplate*/) {
         this.repository = repository;
-        this.accountMongoTemplate = accountMongoTemplate;
+        //this.accountMongoTemplate = accountMongoTemplate;
     }
 
     @Override

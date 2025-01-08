@@ -1,26 +1,23 @@
-package ec.com.sofka.request;
+package ec.com.sofka.commands;
 
-import ec.com.sofka.account.values.AccountEnum;
-import ec.com.sofka.generics.utils.Request;
+import ec.com.sofka.generics.utils.Command;
 
 import java.math.BigDecimal;
 
 //Usage of the Request class
-public class CreateAccountRequest extends Request {
+public class UpdateAccountCommand extends Command {
     private final BigDecimal balance;
     private final String numberAcc;
     private final String customerName;
     private final String status;
 
-    public CreateAccountRequest(final String numberAcc, final String customerName, final BigDecimal balance) {
-        super(null);
+    public UpdateAccountCommand(final String aggregateId, final BigDecimal balance, final String numberAcc, final String customerName, final String status) {
+        super(aggregateId);
         this.balance = balance;
         this.numberAcc = numberAcc;
         this.customerName = customerName;
-        this.status = AccountEnum.ACCOUNT_ACTIVE.name();
+        this.status = status;
     }
-
-
 
     public BigDecimal getBalance() {
         return balance;

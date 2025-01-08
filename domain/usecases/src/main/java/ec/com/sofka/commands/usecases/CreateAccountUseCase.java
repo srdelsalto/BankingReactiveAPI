@@ -1,48 +1,44 @@
-package ec.com.sofka;
+package ec.com.sofka.commands.usecases;
 
 
 import ec.com.sofka.aggregate.Customer;
-import ec.com.sofka.request.CreateAccountRequest;
-import ec.com.sofka.gateway.AccountRepository;
+import ec.com.sofka.commands.CreateAccountCommand;
+import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
-import ec.com.sofka.gateway.dto.AccountDTO;
 import ec.com.sofka.generics.interfaces.IUseCaseExecute;
-import ec.com.sofka.responses.CreateAccountResponse;
+import ec.com.sofka.queries.responses.CreateAccountResponse;
 
 //Usage of the IUseCase interface
-public class CreateAccountUseCase implements IUseCaseExecute<CreateAccountRequest, CreateAccountResponse> {
+public class CreateAccountUseCase implements IUseCaseExecute<CreateAccountCommand, CreateAccountResponse> {
     private final IEventStore repository;
-    private final AccountRepository accountRepository;
+    private final BusEvent busEvent;
 
-    public CreateAccountUseCase(IEventStore repository, AccountRepository accountRepository) {
+    public CreateAccountUseCase(IEventStore repository, BusEvent busEvent) {
         this.repository = repository;
-        this.accountRepository = accountRepository;
+        this.busEvent = busEvent;
     }
 
     //Of course, you have to create that class Response in usecases module on a package called responses or you can also group the command with their response class in a folder (Screaming architecture)
     //You maybe want to check Jacobo's repository to see how he did it
     @Override
-    public CreateAccountResponse execute(CreateAccountRequest request) {
+    public CreateAccountResponse execute(CreateAccountCommand request) {
         //Create the aggregate, remember this usecase is to create the account the first time so just have to create it.
         Customer customer = new Customer();
 
         //Then we create the account
         customer.createAccount(request.getNumber(), request.getBalance(),  request.getCustomerName(),request.getStatus());
 
-        //Save the account on the account repository
-        accountRepository.save(
-                new AccountDTO(
-                        customer.getAccount().getId().getValue(),
-                        customer.getAccount().getName().getValue(),
-                        customer.getAccount().getNumber().getValue(),
-                        customer.getAccount().getBalance().getValue(),
-                        customer.getAccount().getStatus().getValue()
-
-                ));
 
         //Last step for events to be saved
-        customer.getUncommittedEvents().forEach(repository::save);
+        //Oh, you look someone who would like rabbits because if the save is done correctly,
+        // I can send the message to the queue
+        customer.getUncommittedEvents()
+                .stream()
+                        .map(repository::save)
+                                .forEach(busEvent::sendEvent);
 
+
+        //Then, call this stuff
         customer.markEventsAsCommitted();
 
         //Return the response
