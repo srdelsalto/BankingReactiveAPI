@@ -2,8 +2,8 @@ package ec.com.sofka.handler;
 
 import ec.com.sofka.dto.TransactionRequestDTO;
 import ec.com.sofka.mapper.TransactionMapper;
-import ec.com.sofka.transaction.CreateTransactionUseCase;
 import ec.com.sofka.transaction.GetAllByAccountNumberUseCase;
+import ec.com.sofka.transaction.commands.usecases.CreateTransactionUseCase;
 import ec.com.sofka.transaction.request.GetAllByAccountNumberRequest;
 import ec.com.sofka.validator.RequestValidator;
 import org.springframework.http.HttpStatus;

@@ -127,7 +127,7 @@ public class AccountRouter {
                     )
             )
     })
-    public RouterFunction<ServerResponse> accountRoutes(){
+    public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.POST("/accounts/number"), accountHandler::getByAccountNumber)
                 .andRoute(RequestPredicates.POST("/accounts").and(accept(MediaType.APPLICATION_JSON)), accountHandler::create)

@@ -3,7 +3,7 @@ package ec.com.sofka.account.commands.usecases;
 
 import ec.com.sofka.account.Account;
 import ec.com.sofka.account.commands.CreateAccountCommand;
-import ec.com.sofka.account.responses.AccountResponse;
+import ec.com.sofka.account.queries.responses.AccountResponse;
 import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.exception.NotFoundException;
 import ec.com.sofka.gateway.BusEvent;
@@ -42,8 +42,6 @@ public class CreateAccountUseCase implements IUseCaseExecute<CreateAccountComman
                             .filter(account -> account.getAccountNumber().getValue().equals(generatedAccountNumber))
                             .findFirst()
                             .orElseThrow(() -> new IllegalStateException("Account creation failed"));
-
-                    System.out.println(customer.getUncommittedEvents().size());
 
                     customer.getUncommittedEvents()
                             .stream()
