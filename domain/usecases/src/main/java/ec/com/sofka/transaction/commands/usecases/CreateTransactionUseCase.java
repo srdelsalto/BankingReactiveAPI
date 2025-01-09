@@ -6,16 +6,13 @@ import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.aggregate.operation.Operation;
 import ec.com.sofka.exception.BadRequestException;
 import ec.com.sofka.exception.NotFoundException;
-import ec.com.sofka.gateway.AccountRepository;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
-import ec.com.sofka.gateway.TransactionRepository;
 import ec.com.sofka.gateway.dto.AccountDTO;
-import ec.com.sofka.gateway.dto.TransactionDTO;
 import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.generics.interfaces.IUseCaseExecute;
 import ec.com.sofka.transaction.commands.CreateTransactionCommand;
-import ec.com.sofka.transaction.responses.TransactionResponse;
+import ec.com.sofka.transaction.queries.responses.TransactionResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

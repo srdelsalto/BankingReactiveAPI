@@ -1,10 +1,11 @@
 package ec.com.sofka.handler;
 
 import ec.com.sofka.dto.TransactionRequestDTO;
+import ec.com.sofka.generics.utils.QueryResponse;
 import ec.com.sofka.mapper.TransactionMapper;
-import ec.com.sofka.transaction.GetAllByAccountNumberUseCase;
 import ec.com.sofka.transaction.commands.usecases.CreateTransactionUseCase;
-import ec.com.sofka.transaction.request.GetAllByAccountNumberRequest;
+import ec.com.sofka.transaction.queries.query.GetAllByAccountNumberQuery;
+import ec.com.sofka.transaction.queries.usecases.GetAllByAccountNumberViewUseCase;
 import ec.com.sofka.validator.RequestValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +19,9 @@ public class TransactionHandler {
 
     private final RequestValidator requestValidator;
     private final CreateTransactionUseCase createTransactionUseCase;
-    private final GetAllByAccountNumberUseCase getAllByAccountNumberUseCase;
+    private final GetAllByAccountNumberViewUseCase getAllByAccountNumberUseCase;
 
-    public TransactionHandler(RequestValidator requestValidator, CreateTransactionUseCase createTransactionUseCase, GetAllByAccountNumberUseCase getAllByAccountNumberUseCase) {
+    public TransactionHandler(RequestValidator requestValidator, CreateTransactionUseCase createTransactionUseCase, GetAllByAccountNumberViewUseCase getAllByAccountNumberUseCase) {
         this.requestValidator = requestValidator;
         this.createTransactionUseCase = createTransactionUseCase;
         this.getAllByAccountNumberUseCase = getAllByAccountNumberUseCase;
@@ -39,9 +40,9 @@ public class TransactionHandler {
     }
 
     public Mono<ServerResponse> getAllByAccountNumber(ServerRequest request) {
-        return request.bodyToMono(GetAllByAccountNumberRequest.class)
-                .flatMapMany(getAllByAccountNumberUseCase::execute)
-                .collectList()
+        return request.bodyToMono(GetAllByAccountNumberQuery.class)
+                .flatMap(getAllByAccountNumberUseCase::get)
+                .map(QueryResponse::getMultipleResults)
                 .flatMap(transactionResponseDTOs ->
                         ServerResponse
                                 .ok()

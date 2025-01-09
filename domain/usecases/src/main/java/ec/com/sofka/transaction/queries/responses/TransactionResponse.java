@@ -1,4 +1,4 @@
-package ec.com.sofka.transaction.responses;
+package ec.com.sofka.transaction.queries.responses;
 
 import ec.com.sofka.transaction.TransactionType;
 

@@ -1,39 +1,40 @@
-package ec.com.sofka.transaction;
+package ec.com.sofka.transaction.queries.usecases;
 
 import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.aggregate.operation.Operation;
 import ec.com.sofka.exception.NotFoundException;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.generics.domain.DomainEvent;
-import ec.com.sofka.generics.interfaces.IUseCase;
-import ec.com.sofka.transaction.request.GetAllByAccountNumberRequest;
-import ec.com.sofka.transaction.responses.TransactionResponse;
+import ec.com.sofka.generics.interfaces.IUseCaseGet;
+import ec.com.sofka.generics.utils.QueryResponse;
+import ec.com.sofka.transaction.queries.query.GetAllByAccountNumberQuery;
+import ec.com.sofka.transaction.queries.responses.TransactionResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GetAllByAccountNumberUseCase implements IUseCase<GetAllByAccountNumberRequest, TransactionResponse> {
+public class GetAllByAccountNumberViewUseCase implements IUseCaseGet<GetAllByAccountNumberQuery, TransactionResponse> {
 
     private final IEventStore repository;
 
-    public GetAllByAccountNumberUseCase(IEventStore repository) {
+    public GetAllByAccountNumberViewUseCase(IEventStore repository) {
         this.repository = repository;
     }
 
     @Override
-    public Flux<TransactionResponse> execute(GetAllByAccountNumberRequest cmd) {
+    public Mono<QueryResponse<TransactionResponse>> get(GetAllByAccountNumberQuery cmd) {
         Flux<DomainEvent> eventsCustomer = repository.findAggregate(cmd.getCustomerId(), "customer");
 
         return Customer.from(cmd.getCustomerId(), eventsCustomer)
-                .flatMapMany(customer -> Mono.justOrEmpty(
+                .flatMap(customer -> Mono.justOrEmpty(
                                         customer.getAccounts().stream()
                                                 .filter(account -> account.getAccountNumber().getValue().equals(cmd.getAccountNumber()))
                                                 .findFirst()
                                 )
                                 .switchIfEmpty(Mono.error(new NotFoundException("Account not found")))
-                                .flatMapMany(account -> {
+                                .flatMap(account -> {
                                     return repository.findAllAggregate("operation")
                                             .collectList()
                                             .flatMapMany(eventsOperation -> {
@@ -56,7 +57,9 @@ public class GetAllByAccountNumberUseCase implements IUseCase<GetAllByAccountNum
                                                     operation.getTransaction().getTimestamp().getValue(),
                                                     operation.getTransaction().getAccountId().getValue(),
                                                     customer.getId().getValue()
-                                            ));
+                                            ))
+                                            .collectList()
+                                            .flatMap(transactions -> Mono.just(QueryResponse.ofMultiple(transactions)));
                                 })
                 );
     }
