@@ -5,7 +5,6 @@ import ec.com.sofka.database.bank.TransactionMongoRepository;
 import ec.com.sofka.gateway.TransactionRepository;
 import ec.com.sofka.gateway.dto.TransactionDTO;
 import ec.com.sofka.mapper.TransactionMapperEntity;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,11 +13,9 @@ import reactor.core.publisher.Mono;
 public class TransactionMongoAdapter implements TransactionRepository {
 
     private final TransactionMongoRepository repository;
-    private final ReactiveMongoTemplate bankMongoTemplate;
 
-    public TransactionMongoAdapter(TransactionMongoRepository repository, ReactiveMongoTemplate bankMongoTemplate) {
+    public TransactionMongoAdapter(TransactionMongoRepository repository) {
         this.repository = repository;
-        this.bankMongoTemplate = bankMongoTemplate;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ec.com.sofka.mapper;
 
+import ec.com.sofka.account.commands.CreateAccountCommand;
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AccountResponseDTO;
-import ec.com.sofka.account.request.CreateAccountRequest;
 import ec.com.sofka.account.responses.AccountResponse;
 
 public class AccountMapper {
@@ -14,7 +14,7 @@ public class AccountMapper {
                 accountResponse.getUserId());
     }
 
-    public static CreateAccountRequest toEntity(AccountRequestDTO accountRequestDTO) {
-        return new CreateAccountRequest(accountRequestDTO.getAggregateId());
+    public static CreateAccountCommand toEntity(AccountRequestDTO accountRequestDTO) {
+        return new CreateAccountCommand(accountRequestDTO.getAggregateId());
     }
 }

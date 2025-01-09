@@ -31,12 +31,12 @@ class CreateAccountUseCaseTest {
     @Mock
     private AccountRepository accountRepository;
 
-    private CreateAccountUseCase useCase;
+    private CreateAccountUseCaseExecute useCase;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        useCase = new CreateAccountUseCase(eventStore, accountRepository);
+        useCase = new CreateAccountUseCaseExecute(eventStore, accountRepository);
     }
 
     @Test

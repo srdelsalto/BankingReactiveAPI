@@ -1,7 +1,7 @@
 package e.com.sofka.router;
 
-import ec.com.sofka.account.CreateAccountUseCase;
-import ec.com.sofka.account.GetAccountByNumberUseCase;
+import ec.com.sofka.account.CreateAccountUseCaseExecute;
+import ec.com.sofka.account.GetAccountByNumberUseCaseExecute;
 import ec.com.sofka.account.GetAllByUserIdUseCase;
 import ec.com.sofka.account.request.CreateAccountRequest;
 import ec.com.sofka.account.request.GetAccountByNumberRequest;
@@ -37,13 +37,13 @@ public class AccountRouterTest {
     private WebTestClient webTestClient;
 
     @MockitoBean
-    private CreateAccountUseCase createAccountUseCase;
+    private CreateAccountUseCaseExecute createAccountUseCase;
 
     @MockitoBean
     private GetAllByUserIdUseCase getAllByUserIdUseCase;
 
     @MockitoBean
-    private GetAccountByNumberUseCase getAccountByNumberUseCase;
+    private GetAccountByNumberUseCaseExecute getAccountByNumberUseCase;
 
     private AccountResponse accountResponse;
 

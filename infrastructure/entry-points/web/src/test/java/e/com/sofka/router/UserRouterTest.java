@@ -1,7 +1,6 @@
 package e.com.sofka.router;
 
 import ec.com.sofka.dto.UserRequestDTO;
-import ec.com.sofka.dto.UserResponseDTO;
 import ec.com.sofka.exception.ConflictException;
 import ec.com.sofka.exception.GlobalExceptionHandler;
 import ec.com.sofka.handler.UserHandler;

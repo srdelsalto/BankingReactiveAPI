@@ -5,7 +5,6 @@ import ec.com.sofka.database.bank.UserMongoRepository;
 import ec.com.sofka.gateway.UserRepository;
 import ec.com.sofka.gateway.dto.UserDTO;
 import ec.com.sofka.mapper.UserMapperEntity;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,11 +12,9 @@ import reactor.core.publisher.Mono;
 @Repository
 public class UserMongoAdapter implements UserRepository {
     private final UserMongoRepository repository;
-    private final ReactiveMongoTemplate bankMongoTemplate;
 
-    public UserMongoAdapter(UserMongoRepository repository, ReactiveMongoTemplate bankMongoTemplate) {
+    public UserMongoAdapter(UserMongoRepository repository) {
         this.repository = repository;
-        this.bankMongoTemplate = bankMongoTemplate;
     }
 
     @Override

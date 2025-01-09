@@ -7,7 +7,6 @@ import ec.com.sofka.generics.interfaces.IApplyEvent;
 
 import java.util.List;
 
-//8. Generics creation to apply DDD: AggregateRoot - To store the actions that will be executed
 public abstract class AggregateRoot<I extends Identity> extends Entity<I> {
     private final DomainActionsHandler actionsHandler= new DomainActionsHandler();
 

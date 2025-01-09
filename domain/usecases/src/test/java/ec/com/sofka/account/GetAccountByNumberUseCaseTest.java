@@ -27,12 +27,12 @@ class GetAccountByNumberUseCaseTest {
     @Mock
     private AccountRepository accountRepository;
 
-    private GetAccountByNumberUseCase useCase;
+    private GetAccountByNumberUseCaseExecute useCase;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        useCase = new GetAccountByNumberUseCase(accountRepository, repository);
+        useCase = new GetAccountByNumberUseCaseExecute(accountRepository, repository);
     }
 
     @Test

@@ -1,8 +1,8 @@
 package ec.com.sofka.handler;
 
-import ec.com.sofka.account.CreateAccountUseCase;
 import ec.com.sofka.account.GetAccountByNumberUseCase;
 import ec.com.sofka.account.GetAllByUserIdUseCase;
+import ec.com.sofka.account.commands.usecases.CreateAccountUseCase;
 import ec.com.sofka.account.request.GetAccountByNumberRequest;
 import ec.com.sofka.account.request.GetAllByUserIdRequest;
 import ec.com.sofka.dto.AccountRequestDTO;
