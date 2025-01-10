@@ -9,6 +9,9 @@ findProject(':app-logs').projectDir = file('./applications/app-logs')
 include ':model'
 findProject(':model').projectDir = file('./domain/model')
 
+include ':admin'
+findProject(':admin').projectDir = file('./domain/admin')
+
 include ':usecases'
 findProject(':usecases').projectDir = file('./domain/usecases')
 
@@ -32,3 +35,6 @@ findProject(':rabbit-listener-bus').projectDir = file('./infrastructure/entry-po
 
 include ':shared'
 findProject(':shared').projectDir = file('./shared')
+
+include ':security'
+findProject(':security').projectDir = file('./infrastructure/security')
