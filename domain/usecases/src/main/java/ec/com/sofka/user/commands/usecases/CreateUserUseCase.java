@@ -8,27 +8,28 @@ import ec.com.sofka.gateway.UserRepository;
 import ec.com.sofka.generics.interfaces.IUseCase;
 import ec.com.sofka.generics.interfaces.IUseCaseExecute;
 import ec.com.sofka.user.commands.CreateUserCommand;
+import ec.com.sofka.user.queries.query.GetUserByDocumentQuery;
 import ec.com.sofka.user.queries.responses.UserResponse;
+import ec.com.sofka.user.queries.usecases.GetUserByDocumentViewUseCase;
 import reactor.core.publisher.Mono;
 
 public class CreateUserUseCase implements IUseCaseExecute<CreateUserCommand, UserResponse> {
     private final IEventStore repository;
-    private final UserRepository userRepository;
     private final BusEvent busEvent;
+    private final GetUserByDocumentViewUseCase getUserByDocumentViewUseCase;
 
 
-    public CreateUserUseCase(IEventStore repository, UserRepository userRepository, BusEvent busEvent) {
+    public CreateUserUseCase(IEventStore repository, BusEvent busEvent, GetUserByDocumentViewUseCase getUserByDocumentViewUseCase) {
         this.repository = repository;
-        this.userRepository = userRepository;
         this.busEvent = busEvent;
+        this.getUserByDocumentViewUseCase = getUserByDocumentViewUseCase;
     }
 
     @Override
     public Mono<UserResponse> execute(CreateUserCommand cmd) {
-        return userRepository.findByDocumentId(cmd.getDocumentId())
-                .flatMap(existingUser -> Mono.error(new ConflictException("User with document ID already exists")))
-                .then(Mono.defer(() -> {
-
+        return getUserByDocumentViewUseCase.get(new GetUserByDocumentQuery(cmd.getDocumentId()))
+                .flatMap(existingUser -> Mono.<UserResponse>error(new ConflictException("User with document ID already exists")))
+                .switchIfEmpty(Mono.defer(() -> {
                     Customer customer = new Customer();
 
                     customer.createUser(cmd.getName(), cmd.getDocumentId());
