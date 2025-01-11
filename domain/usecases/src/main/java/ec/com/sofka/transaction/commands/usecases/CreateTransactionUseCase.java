@@ -1,11 +1,11 @@
 package ec.com.sofka.transaction.commands.usecases;
 
+import ec.com.sofka.BadRequestException;
+import ec.com.sofka.NotFoundException;
 import ec.com.sofka.TransactionStrategy;
 import ec.com.sofka.TransactionStrategyFactory;
 import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.aggregate.operation.Operation;
-import ec.com.sofka.exception.BadRequestException;
-import ec.com.sofka.exception.NotFoundException;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.gateway.dto.AccountDTO;

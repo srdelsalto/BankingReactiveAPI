@@ -3,15 +3,13 @@ package ec.com.sofka.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import ec.com.sofka.*;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.reactive.config.CorsRegistry;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -37,6 +35,12 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             }
             if (ex instanceof ConflictException) {
                 return HttpStatus.CONFLICT;
+            }
+            if (ex instanceof AuthenticationException) {
+                return HttpStatus.UNAUTHORIZED;
+            }
+            if (ex instanceof AccessDeniedException) {
+                return HttpStatus.FORBIDDEN;
             }
             return HttpStatus.INTERNAL_SERVER_ERROR;
         };
@@ -66,18 +70,5 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         return response.writeWith(Mono.fromSupplier(() ->
                 errorResponseSerializer.apply(errorResponse)
         ));
-    }
-
-    @Bean
-    public WebFluxConfigurer corsConfigurer() {
-        return new WebFluxConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
-            }
-        };
     }
 }

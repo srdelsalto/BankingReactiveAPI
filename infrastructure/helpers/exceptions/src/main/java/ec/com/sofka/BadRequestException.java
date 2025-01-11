@@ -1,4 +1,4 @@
-package ec.com.sofka.exception;
+package ec.com.sofka;
 
 public class BadRequestException extends RuntimeException{
     public BadRequestException(String message) {

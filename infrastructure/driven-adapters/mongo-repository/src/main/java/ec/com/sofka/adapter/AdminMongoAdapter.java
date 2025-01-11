@@ -22,4 +22,9 @@ public class AdminMongoAdapter implements AdminRepository {
         return adminMongoRepository.save(adminEntity).map(AdminMapperEntity::fromEntity);
     }
 
+    @Override
+    public Mono<AdminDTO> findByEmail(String email) {
+        return adminMongoRepository.findByEmail(email).map(AdminMapperEntity::fromEntity);
+    }
+
 }

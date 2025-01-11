@@ -3,12 +3,12 @@ package ec.com.sofka.usecases.responses;
 public class AdminResponse {
     private final String id;
     private final String email;
-    private final String password;
+    private final String token;
 
-    public AdminResponse(String id, String email, String password) {
+    public AdminResponse(String id, String email, String token) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.token = token;
     }
 
     public String getId() {
@@ -19,7 +19,7 @@ public class AdminResponse {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 }

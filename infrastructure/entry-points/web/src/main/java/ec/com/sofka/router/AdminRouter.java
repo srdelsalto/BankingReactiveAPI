@@ -20,6 +20,7 @@ public class AdminRouter {
     @Bean
     public RouterFunction<ServerResponse> adminRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.POST("/admin/register"), adminHandler::create);
+                .route(RequestPredicates.POST("/admin/register"), adminHandler::create)
+                .andRoute(RequestPredicates.POST("/admin/login"), adminHandler::login);
     }
 }

@@ -1,11 +1,9 @@
 package ec.com.sofka.user.commands.usecases;
 
+import ec.com.sofka.ConflictException;
 import ec.com.sofka.aggregate.customer.Customer;
-import ec.com.sofka.exception.ConflictException;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
-import ec.com.sofka.gateway.UserRepository;
-import ec.com.sofka.generics.interfaces.IUseCase;
 import ec.com.sofka.generics.interfaces.IUseCaseExecute;
 import ec.com.sofka.user.commands.CreateUserCommand;
 import ec.com.sofka.user.queries.query.GetUserByDocumentQuery;

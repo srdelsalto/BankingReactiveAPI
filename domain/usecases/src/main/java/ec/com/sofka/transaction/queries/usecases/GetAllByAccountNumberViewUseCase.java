@@ -2,7 +2,7 @@ package ec.com.sofka.transaction.queries.usecases;
 
 import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.aggregate.operation.Operation;
-import ec.com.sofka.exception.NotFoundException;
+import ec.com.sofka.NotFoundException;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.generics.interfaces.IUseCaseGet;
