@@ -27,6 +27,7 @@ public class JwtAuthFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String token = extractTokenFromRequest(exchange.getRequest());
 
+        /*System.out.println(token);*/
         if (token != null && jwtServiceAdapter.isTokenValid(token)) {
             String username = jwtServiceAdapter.extractUsername(token);
 
