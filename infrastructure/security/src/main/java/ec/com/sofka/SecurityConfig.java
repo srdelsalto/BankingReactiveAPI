@@ -32,7 +32,7 @@ public class SecurityConfig {
                 )
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/admin/**").permitAll()
+                        .pathMatchers("/admin/**", "/webjars/**", "/v3/api-docs/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .build();

@@ -6,6 +6,7 @@ import ec.com.sofka.account.queries.query.GetAllByUserIdQuery;
 import ec.com.sofka.account.queries.usecases.GetAccountByNumberViewUseCase;
 import ec.com.sofka.account.queries.usecases.GetAllByUserIdViewUseCase;
 import ec.com.sofka.dto.AccountRequestDTO;
+import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
 import ec.com.sofka.mapper.AccountMapper;
 import ec.com.sofka.validator.RequestValidator;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,8 @@ public class AccountHandler {
     }
 
     public Mono<ServerResponse> getByAccountNumber(ServerRequest request) {
-        return request.bodyToMono(GetAccountByNumberQuery.class)
+        return request.bodyToMono(GetAccountByNumberRequestDTO.class)
+                .map(AccountMapper::toAccountByNumberQuery)
                 .flatMap(getAccountByNumberViewUseCase::get)
                 .map(queryResponse -> AccountMapper.fromEntity(queryResponse.getSingleResult().get()))
                 .flatMap(accountResponseDTO ->

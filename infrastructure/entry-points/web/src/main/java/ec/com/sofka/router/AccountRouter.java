@@ -2,6 +2,7 @@ package ec.com.sofka.router;
 
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AccountResponseDTO;
+import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
 import ec.com.sofka.exception.ErrorResponse;
 import ec.com.sofka.handler.AccountHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -98,20 +99,20 @@ public class AccountRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/accounts/{id}",
+                    path = "/accounts/number",
                     operation = @Operation(
                             tags = {"Accounts"},
                             operationId = "getByAccountNumber",
                             summary = "Get account by account number",
                             description = "Fetches the account details associated with the given account number. If the account does not exist, it returns a 404 Not Found error.",
-                            parameters = {
-                                    @Parameter(
-                                            name = "id",
-                                            description = "The account number to retrieve account info",
-                                            required = true,
-                                            in = ParameterIn.PATH
+                            requestBody = @RequestBody(
+                                    description = "Account get details",
+                                    required = true,
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetAccountByNumberRequestDTO.class)
                                     )
-                            },
+                            ),
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",

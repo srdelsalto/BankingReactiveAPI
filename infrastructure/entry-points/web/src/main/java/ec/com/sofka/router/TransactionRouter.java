@@ -1,5 +1,7 @@
 package ec.com.sofka.router;
 
+import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
+import ec.com.sofka.dto.GetTransactionByAccountRequestDTO;
 import ec.com.sofka.dto.TransactionRequestDTO;
 import ec.com.sofka.dto.TransactionResponseDTO;
 import ec.com.sofka.exception.ErrorResponse;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -74,20 +77,20 @@ public class TransactionRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/transactions/{accountNumber}/account",
+                    path = "/transactions/account",
                     operation = @Operation(
                             tags = {"Transactions"},
                             operationId = "getAllByUserId",
                             summary = "Get all transactions for an account",
                             description = "This endpoint retrieves all transactions associated with a specific account number. If the account does not exist, it returns a 404 Not Found error.",
-                            parameters = {
-                                    @Parameter(
-                                            name = "accountNumber",
-                                            description = "The account number to retrieve transactions for",
-                                            required = true,
-                                            in = ParameterIn.PATH
+                            requestBody = @RequestBody(
+                                    description = "Transaction get details",
+                                    required = true,
+                                    content = @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetTransactionByAccountRequestDTO.class)
                                     )
-                            },
+                            ),
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",

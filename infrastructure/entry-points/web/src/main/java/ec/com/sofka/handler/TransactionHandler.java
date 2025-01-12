@@ -1,5 +1,6 @@
 package ec.com.sofka.handler;
 
+import ec.com.sofka.dto.GetTransactionByAccountRequestDTO;
 import ec.com.sofka.dto.TransactionRequestDTO;
 import ec.com.sofka.generics.utils.QueryResponse;
 import ec.com.sofka.mapper.TransactionMapper;
@@ -40,7 +41,8 @@ public class TransactionHandler {
     }
 
     public Mono<ServerResponse> getAllByAccountNumber(ServerRequest request) {
-        return request.bodyToMono(GetAllByAccountNumberQuery.class)
+        return request.bodyToMono(GetTransactionByAccountRequestDTO.class)
+                .map(TransactionMapper::toGetAllByAccount)
                 .flatMap(getAllByAccountNumberUseCase::get)
                 .map(QueryResponse::getMultipleResults)
                 .flatMap(transactionResponseDTOs ->
