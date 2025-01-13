@@ -99,20 +99,20 @@ public class AccountRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/accounts/number",
+                    path = "/accounts/{id}",
                     operation = @Operation(
                             tags = {"Accounts"},
                             operationId = "getByAccountNumber",
                             summary = "Get account by account number",
                             description = "Fetches the account details associated with the given account number. If the account does not exist, it returns a 404 Not Found error.",
-                            requestBody = @RequestBody(
-                                    description = "Account get details",
-                                    required = true,
-                                    content = @Content(
-                                            mediaType = "application/json",
-                                            schema = @Schema(implementation = GetAccountByNumberRequestDTO.class)
+                            parameters = {
+                                    @Parameter(
+                                            name = "id",
+                                            description = "The account number to retrieve account info",
+                                            required = true,
+                                            in = ParameterIn.PATH
                                     )
-                            ),
+                            },
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -130,7 +130,7 @@ public class AccountRouter {
     })
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.POST("/accounts/number"), accountHandler::getByAccountNumber)
+                .route(RequestPredicates.GET("/accounts/{id}"), accountHandler::getByAccountNumber)
                 .andRoute(RequestPredicates.POST("/accounts").and(accept(MediaType.APPLICATION_JSON)), accountHandler::create)
                 .andRoute(RequestPredicates.GET("/accounts/{userId}/user"), accountHandler::getAllByUserId);
     }

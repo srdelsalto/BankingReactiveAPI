@@ -113,7 +113,6 @@ class CreateTransactionUseCaseTest {
                     assertEquals(fee, response.getFee());
                     assertEquals(TransactionType.ATM_DEPOSIT, response.getType());
                     assertEquals(expectedBalance, updatedAccountDTO.getBalance());
-                    assertEquals(customerId, response.getCustomerId());
                 })
                 .verifyComplete();
 
@@ -184,7 +183,6 @@ class CreateTransactionUseCaseTest {
                     assertEquals(fee, response.getFee());
                     assertEquals(TransactionType.ATM_WITHDRAWAL, response.getType());
                     assertEquals(expectedBalance, updatedAccountDTO.getBalance());
-                    assertEquals(customerId, response.getCustomerId());
                 })
                 .verifyComplete();
 

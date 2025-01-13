@@ -2,18 +2,19 @@ package ec.com.sofka.transaction;
 
 
 import ec.com.sofka.NotFoundException;
-import ec.com.sofka.aggregate.customer.events.AccountCreated;
-import ec.com.sofka.aggregate.operation.events.TransactionCreated;
-import ec.com.sofka.gateway.IEventStore;
+import ec.com.sofka.gateway.AccountRepository;
+import ec.com.sofka.gateway.TransactionRepository;
+import ec.com.sofka.gateway.dto.AccountDTO;
+import ec.com.sofka.gateway.dto.TransactionDTO;
 import ec.com.sofka.transaction.queries.query.GetAllByAccountNumberQuery;
 import ec.com.sofka.transaction.queries.usecases.GetAllByAccountNumberViewUseCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -26,19 +27,21 @@ import static org.mockito.Mockito.*;
 class GetAllByAccountNumberUseCaseTest {
 
     @Mock
-    private IEventStore repository;
+    private TransactionRepository transactionRepository;
+
+    @Mock
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private GetAllByAccountNumberViewUseCase useCase;
 
     @Test
     void shouldThrowNotFoundExceptionWhenAccountNotFound() {
-        String customerId = "customer-1";
         String accountNumber = "12345678";
 
-        when(repository.findAggregate(customerId, "customer")).thenReturn(Flux.empty());
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Mono.empty());
 
-        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(customerId, accountNumber);
+        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(accountNumber);
 
         StepVerifier.create(useCase.get(request))
                 .expectErrorMatches(throwable ->
@@ -46,26 +49,23 @@ class GetAllByAccountNumberUseCaseTest {
                                 throwable.getMessage().equals("Account not found"))
                 .verify();
 
-        verify(repository, times(1)).findAggregate(customerId, "customer");
-        verifyNoMoreInteractions(repository);
+        verify(accountRepository, times(1)).findByAccountNumber(accountNumber);
     }
 
     @Test
     void shouldReturnTransactionsSuccessfully() {
-        String customerId = "customer-1";
         String accountNumber = "12345678";
         String operationId = "operation-1";
         String userId = "user-1";
 
-        AccountCreated accountEvent = new AccountCreated(
+        AccountDTO accountCreated = new AccountDTO(
                 "account1",
                 accountNumber,
                 new BigDecimal("1500.00"),
                 userId
         );
-        accountEvent.setAggregateRootId(customerId);
 
-        TransactionCreated transactionCreated = new TransactionCreated(
+        TransactionDTO transactionCreated = new TransactionDTO(
                 operationId,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(10),
@@ -74,12 +74,11 @@ class GetAllByAccountNumberUseCaseTest {
                 LocalDateTime.now(),
                 accountNumber
         );
-        transactionCreated.setAggregateRootId(operationId);
 
-        when(repository.findAggregate(customerId, "customer")).thenReturn(Flux.just(accountEvent));
-        when(repository.findAllAggregate("operation")).thenReturn(Flux.just(transactionCreated));
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Mono.just(accountCreated));
+        when(transactionRepository.getAllByAccountId(accountNumber)).thenReturn(Flux.just(transactionCreated));
 
-        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(customerId, accountNumber);
+        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(accountNumber);
 
         StepVerifier.create(useCase.get(request))
                 .expectNextMatches(response ->
@@ -88,40 +87,37 @@ class GetAllByAccountNumberUseCaseTest {
                                 response.getMultipleResults().get(0).getFee().equals(BigDecimal.valueOf(10)) &&
                                 response.getMultipleResults().get(0).getNetAmount().equals(BigDecimal.valueOf(90)) &&
                                 response.getMultipleResults().get(0).getType() == TransactionType.BRANCH_DEPOSIT &&
-                                response.getMultipleResults().get(0).getAccountId().equals(accountNumber) &&
-                                response.getMultipleResults().get(0).getCustomerId().equals(customerId)
+                                response.getMultipleResults().get(0).getAccountId().equals(accountNumber)
                 )
                 .verifyComplete();
 
-        verify(repository, times(1)).findAggregate(customerId, "customer");
-        verify(repository, times(1)).findAllAggregate("operation");
+        verify(accountRepository, times(1)).findByAccountNumber(accountNumber);
+        verify(transactionRepository, times(1)).getAllByAccountId(accountNumber);
     }
 
     @Test
     void shouldReturnEmptyWhenNoTransactionsExist() {
-        String customerId = "customer-1";
         String accountNumber = "12345678";
         String userId = "user-1";
 
-        AccountCreated accountEvent = new AccountCreated(
+        AccountDTO accountCreated = new AccountDTO(
                 "account1",
                 accountNumber,
                 new BigDecimal("1500.00"),
                 userId
         );
-        accountEvent.setAggregateRootId(customerId);
 
-        when(repository.findAggregate(customerId, "customer")).thenReturn(Flux.just(accountEvent));
-        when(repository.findAllAggregate("operation")).thenReturn(Flux.empty());
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Mono.just(accountCreated));
+        when(transactionRepository.getAllByAccountId(accountNumber)).thenReturn(Flux.empty());
 
-        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(customerId, accountNumber);
+        GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(accountNumber);
 
         StepVerifier.create(useCase.get(request))
                 .expectNextMatches(Objects::nonNull)
                 .verifyComplete();
 
-        verify(repository, times(1)).findAggregate(customerId, "customer");
-        verify(repository, times(1)).findAllAggregate("operation");
+        verify(accountRepository, times(1)).findByAccountNumber(accountNumber);
+        verify(transactionRepository, times(1)).getAllByAccountId(accountNumber);
     }
 
 }

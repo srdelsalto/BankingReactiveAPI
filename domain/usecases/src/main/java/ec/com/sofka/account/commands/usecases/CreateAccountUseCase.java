@@ -50,12 +50,12 @@ public class CreateAccountUseCase implements IUseCaseExecute<CreateAccountComman
 
                     customer.markEventsAsCommitted();
 
-
                     return Mono.just(new AccountResponse(
-                            customer.getId().getValue(),
+                            newAccount.getId().getValue(),
                             newAccount.getAccountNumber().getValue(),
                             newAccount.getBalance().getValue(),
-                            newAccount.getUserId().getValue()
+                            newAccount.getUserId().getValue(),
+                            customer.getId().getValue()
                     ));
                 });
     }

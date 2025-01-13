@@ -7,12 +7,10 @@ import ec.com.sofka.aggregate.customer.events.UserCreated;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.generics.domain.DomainEvent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,7 +37,6 @@ class CreateAccountUseCaseTest {
     void shouldCreateAccountSuccessfully() {
         String aggregateId = "customer123";
         String userId = "user123";
-        String accountNumber = "RANDOM001";
 
         UserCreated userCreated = new UserCreated(userId, "John Doe", "DOC123");
         userCreated.setAggregateRootId(aggregateId);

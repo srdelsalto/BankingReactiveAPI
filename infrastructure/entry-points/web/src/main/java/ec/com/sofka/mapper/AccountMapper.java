@@ -10,7 +10,7 @@ import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
 public class AccountMapper {
     public static AccountResponseDTO fromEntity(AccountResponse accountResponse) {
         return new AccountResponseDTO(
-                accountResponse.getCustomerId(),
+                accountResponse.getId(),
                 accountResponse.getAccountNumber(),
                 accountResponse.getBalance(),
                 accountResponse.getUserId());
@@ -21,6 +21,6 @@ public class AccountMapper {
     }
 
     public static GetAccountByNumberQuery toAccountByNumberQuery(GetAccountByNumberRequestDTO getAccountByNumberRequestDTO) {
-        return new GetAccountByNumberQuery(getAccountByNumberRequestDTO.getAggregateId(), getAccountByNumberRequestDTO.getAccountNumber());
+        return new GetAccountByNumberQuery(getAccountByNumberRequestDTO.getAccountNumber());
     }
 }

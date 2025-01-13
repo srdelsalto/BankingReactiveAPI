@@ -40,16 +40,17 @@ public class TransactionHandler {
                         .bodyValue(transactionResponseDTO));
     }
 
-    public Mono<ServerResponse> getAllByAccountNumber(ServerRequest request) {
-        return request.bodyToMono(GetTransactionByAccountRequestDTO.class)
-                .map(TransactionMapper::toGetAllByAccount)
-                .flatMap(getAllByAccountNumberUseCase::get)
-                .map(QueryResponse::getMultipleResults)
+    public Mono<ServerResponse> getAllByAccountNumber(ServerRequest request){
+        String accountNumber = request.pathVariable("accountNumber");
+
+        return getAllByAccountNumberUseCase.get(new GetAllByAccountNumberQuery(accountNumber))
+                .map(response -> response.getMultipleResults()
+                        .stream()
+                        .map(TransactionMapper::fromEntity))
                 .flatMap(transactionResponseDTOs ->
                         ServerResponse
                                 .ok()
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(transactionResponseDTOs)
-                );
+                                .bodyValue(transactionResponseDTOs));
     }
 }

@@ -97,8 +97,7 @@ public class CreateTransactionUseCase implements IUseCaseExecute<CreateTransacti
                                     operation.getTransaction().getNetAmount().getValue(),
                                     operation.getTransaction().getType().getValue(),
                                     operation.getTransaction().getTimestamp().getValue(),
-                                    operation.getTransaction().getAccountId().getValue(),
-                                    customer.getId().getValue()
+                                    operation.getTransaction().getAccountId().getValue()
                             ));
                         }));
     }

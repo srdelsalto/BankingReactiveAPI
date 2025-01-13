@@ -31,10 +31,9 @@ public class AccountHandler {
         this.getAllByUserIdViewUseCase = getAllByUserIdViewUseCase;
     }
 
-    public Mono<ServerResponse> getByAccountNumber(ServerRequest request) {
-        return request.bodyToMono(GetAccountByNumberRequestDTO.class)
-                .map(AccountMapper::toAccountByNumberQuery)
-                .flatMap(getAccountByNumberViewUseCase::get)
+    public Mono<ServerResponse> getByAccountNumber(ServerRequest request){
+        String accountNumber = request.pathVariable("id");
+        return getAccountByNumberViewUseCase.get(new GetAccountByNumberQuery(accountNumber))
                 .map(queryResponse -> AccountMapper.fromEntity(queryResponse.getSingleResult().get()))
                 .flatMap(accountResponseDTO ->
                         ServerResponse

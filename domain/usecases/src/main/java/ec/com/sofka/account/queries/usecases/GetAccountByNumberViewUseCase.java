@@ -5,6 +5,7 @@ import ec.com.sofka.account.queries.query.GetAccountByNumberQuery;
 
 import ec.com.sofka.account.queries.responses.AccountResponse;
 import ec.com.sofka.aggregate.customer.Customer;
+import ec.com.sofka.gateway.AccountRepository;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.generics.interfaces.IUseCaseGet;
@@ -13,29 +14,23 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class GetAccountByNumberViewUseCase implements IUseCaseGet<GetAccountByNumberQuery, AccountResponse> {
-    private final IEventStore repository;
+    private final AccountRepository accountRepository;
 
-    public GetAccountByNumberViewUseCase(IEventStore repository) {
-        this.repository = repository;
+    public GetAccountByNumberViewUseCase(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public Mono<QueryResponse<AccountResponse>> get(GetAccountByNumberQuery query) {
-        Flux<DomainEvent> events = repository.findAggregate(query.getAggregateId(), "customer");
-
-        return Customer.from(query.getAggregateId(), events)
-                .flatMap(customer -> Mono.justOrEmpty(
-                                        customer.getAccounts().stream()
-                                                .filter(account -> account.getAccountNumber().getValue().equals(query.getAccountNumber()))
-                                                .findFirst()
-                                )
-                                .switchIfEmpty(Mono.error(new NotFoundException("Account not found")))
-                                .map(account -> QueryResponse.ofSingle(new AccountResponse(
-                                        customer.getId().getValue(),
-                                        account.getAccountNumber().getValue(),
-                                        account.getBalance().getValue(),
-                                        account.getUserId().getValue()
-                                )))
-                );
+        return accountRepository.findByAccountNumber(query.getAccountNumber())
+                .switchIfEmpty(Mono.error(new NotFoundException("Account not found")))
+                .map(accountDTO -> QueryResponse.ofSingle(
+                        new AccountResponse(
+                                accountDTO.getId(),
+                                accountDTO.getAccountNumber(),
+                                accountDTO.getBalance(),
+                                accountDTO.getUserId()
+                        )
+                ));
     }
 }

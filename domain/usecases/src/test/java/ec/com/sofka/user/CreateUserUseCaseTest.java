@@ -3,14 +3,12 @@ package ec.com.sofka.user;
 import ec.com.sofka.ConflictException;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
-import ec.com.sofka.gateway.UserRepository;
 import ec.com.sofka.gateway.dto.UserDTO;
 import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.user.commands.CreateUserCommand;
 import ec.com.sofka.user.commands.usecases.CreateUserUseCase;
 import ec.com.sofka.user.queries.query.GetUserByDocumentQuery;
 import ec.com.sofka.user.queries.usecases.GetUserByDocumentViewUseCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -75,7 +73,7 @@ class CreateUserUseCaseTest {
 
         StepVerifier.create(useCase.execute(request))
                 .consumeNextWith(response -> {
-                    assertNotNull(response.getCustomerId());
+                    assertNotNull(response.getId());
                     assertEquals(name, response.getName());
                     assertEquals(documentId, response.getDocumentId());
                 })

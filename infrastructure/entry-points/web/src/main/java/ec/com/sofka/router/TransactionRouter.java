@@ -83,14 +83,14 @@ public class TransactionRouter {
                             operationId = "getAllByUserId",
                             summary = "Get all transactions for an account",
                             description = "This endpoint retrieves all transactions associated with a specific account number. If the account does not exist, it returns a 404 Not Found error.",
-                            requestBody = @RequestBody(
-                                    description = "Transaction get details",
-                                    required = true,
-                                    content = @Content(
-                                            mediaType = "application/json",
-                                            schema = @Schema(implementation = GetTransactionByAccountRequestDTO.class)
+                            parameters = {
+                                    @Parameter(
+                                            name = "accountNumber",
+                                            description = "The account number to retrieve transactions for",
+                                            required = true,
+                                            in = ParameterIn.PATH
                                     )
-                            ),
+                            },
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
@@ -109,6 +109,6 @@ public class TransactionRouter {
     public RouterFunction<ServerResponse> transactionRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.POST("/transactions").and(accept(MediaType.APPLICATION_JSON)), transactionHandler::create)
-                .andRoute(RequestPredicates.POST("/transactions/account"), transactionHandler::getAllByAccountNumber);
+                .andRoute(RequestPredicates.GET("/transactions/{accountNumber}/account"), transactionHandler::getAllByAccountNumber);
     }
 }

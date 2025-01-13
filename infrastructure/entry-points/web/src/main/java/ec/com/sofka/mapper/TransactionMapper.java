@@ -15,7 +15,7 @@ public class TransactionMapper {
                 transactionResponse.getNetAmount(),
                 transactionResponse.getType(),
                 transactionResponse.getTimestamp(),
-                transactionResponse.getCustomerId()
+                transactionResponse.getAccountId()
         );
     }
 
@@ -24,6 +24,6 @@ public class TransactionMapper {
     }
 
     public static GetAllByAccountNumberQuery toGetAllByAccount(GetTransactionByAccountRequestDTO getTransactionByAccountRequestDTO){
-        return new GetAllByAccountNumberQuery(getTransactionByAccountRequestDTO.getCustomerId(), getTransactionByAccountRequestDTO.getAccountNumber());
+        return new GetAllByAccountNumberQuery(getTransactionByAccountRequestDTO.getAccountNumber());
     }
 }

@@ -13,9 +13,8 @@ public class TransactionResponse {
     private final TransactionType type;
     private final LocalDateTime timestamp;
     private final String accountId;
-    private final String customerId;
 
-    public TransactionResponse(String operationId, BigDecimal amount, BigDecimal fee, BigDecimal netAmount, TransactionType type, LocalDateTime timestamp, String accountId, String customerId) {
+    public TransactionResponse(String operationId, BigDecimal amount, BigDecimal fee, BigDecimal netAmount, TransactionType type, LocalDateTime timestamp, String accountId) {
         this.operationId = operationId;
         this.amount = amount;
         this.fee = fee;
@@ -23,7 +22,6 @@ public class TransactionResponse {
         this.type = type;
         this.timestamp = timestamp;
         this.accountId = accountId;
-        this.customerId = customerId;
     }
 
     public String getOperationId() {
@@ -52,9 +50,5 @@ public class TransactionResponse {
 
     public String getAccountId() {
         return accountId;
-    }
-
-    public String getCustomerId() {
-        return customerId;
     }
 }
