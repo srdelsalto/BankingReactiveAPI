@@ -1,5 +1,6 @@
 package ec.com.sofka.dto;
 
+import ec.com.sofka.ROLE;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -17,9 +18,14 @@ public class AdminRequestDTO {
     )
     private String password;
 
-    public AdminRequestDTO(String email, String password) {
+    @NotBlank(message = "Role cannot be blank")
+    @Pattern(regexp = "ADMIN|USER|GOD", message = "Invalid role")
+    private String role;
+
+    public AdminRequestDTO(String email, String password, String role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -28,5 +34,9 @@ public class AdminRequestDTO {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+        return role;
     }
 }

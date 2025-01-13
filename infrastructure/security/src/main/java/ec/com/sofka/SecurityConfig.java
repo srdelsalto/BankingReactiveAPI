@@ -2,6 +2,7 @@ package ec.com.sofka;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -33,6 +34,12 @@ public class SecurityConfig {
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/admin/**", "/webjars/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/users/**", "/transactions/**", "/accounts/**")
+                        .hasAnyRole("GOD", "ADMIN")
+
+                        .pathMatchers(HttpMethod.POST, "/users/**", "/transactions/**", "/accounts/**")
+                        .hasRole("GOD")
+
                         .anyExchange().authenticated()
                 )
                 .build();

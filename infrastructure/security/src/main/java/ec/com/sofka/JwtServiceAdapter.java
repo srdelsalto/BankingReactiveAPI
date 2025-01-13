@@ -20,12 +20,13 @@ public class JwtServiceAdapter implements JwtService {
     private long jwtExpiration;
 
     @Override
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
-                .claims()
                 .subject(username)
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusMillis(jwtExpiration)))
+                .claims()
+                    .add("role", role)
+                    .issuedAt(Date.from(Instant.now()))
+                    .expiration(Date.from(Instant.now().plusMillis(jwtExpiration)))
                 .and()
                 .signWith(getSigningKey())
                 .compact();
@@ -43,6 +44,15 @@ public class JwtServiceAdapter implements JwtService {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public String extractRole(String token) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 
     public boolean isTokenValid(String token) {

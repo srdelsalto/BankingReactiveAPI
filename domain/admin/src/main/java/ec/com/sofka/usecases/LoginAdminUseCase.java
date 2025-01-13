@@ -27,7 +27,7 @@ public class LoginAdminUseCase {
                     if (!passwordHasher.verifyPassword(loginAdminCommand.getPassword(), adminDTO.getPassword())) {
                         throw new AccessDeniedException("Bad credentials");
                     }
-                    String token = jwtService.generateToken(adminDTO.getEmail());
+                    String token = jwtService.generateToken(adminDTO.getEmail(), adminDTO.getRole().name());
                     return new AdminResponse(adminDTO.getId(), adminDTO.getEmail(), token);
                 });
     }

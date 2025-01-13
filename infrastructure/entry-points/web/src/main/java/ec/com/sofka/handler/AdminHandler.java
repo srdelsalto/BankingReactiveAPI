@@ -2,6 +2,7 @@ package ec.com.sofka.handler;
 
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AdminRequestDTO;
+import ec.com.sofka.dto.LoginRequestDTO;
 import ec.com.sofka.mapper.AccountMapper;
 import ec.com.sofka.mapper.AdminMapper;
 import ec.com.sofka.usecases.LoginAdminUseCase;
@@ -41,7 +42,7 @@ public class AdminHandler {
     }
 
     public Mono<ServerResponse> login(ServerRequest request) {
-        return request.bodyToMono(AdminRequestDTO.class)
+        return request.bodyToMono(LoginRequestDTO.class)
                 .doOnNext(requestValidator::validate)
                 .map(AdminMapper::toLoginCommand)
                 .flatMap(loginAdminUseCase::execute)

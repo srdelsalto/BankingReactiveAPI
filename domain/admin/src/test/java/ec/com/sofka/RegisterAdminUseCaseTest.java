@@ -37,11 +37,11 @@ public class RegisterAdminUseCaseTest {
         String password = "password123";
         String hashedPassword = "hashedPassword";
 
-        AdminDTO existingAdmin = new AdminDTO("admin-1", email, hashedPassword);
+        AdminDTO existingAdmin = new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN);
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.just(existingAdmin));
 
-        RegisterAdminCommand command = new RegisterAdminCommand(email, password);
+        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.ADMIN);
 
         StepVerifier.create(useCase.execute(command))
                 .expectErrorMatches(throwable ->
@@ -62,10 +62,10 @@ public class RegisterAdminUseCaseTest {
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.empty());
         when(passwordHasher.hashPassword(password)).thenReturn(hashedPassword);
-        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword)));
+        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN)));
         when(jwtService.generateToken(email)).thenReturn(token);
 
-        RegisterAdminCommand command = new RegisterAdminCommand(email, password);
+        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.ADMIN);
 
         StepVerifier.create(useCase.execute(command))
                 .consumeNextWith(response -> {

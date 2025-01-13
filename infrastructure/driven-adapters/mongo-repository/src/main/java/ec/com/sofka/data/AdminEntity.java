@@ -1,5 +1,6 @@
 package ec.com.sofka.data;
 
+import ec.com.sofka.ROLE;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,18 +14,22 @@ public class AdminEntity {
 
     private String password;
 
+    private ROLE role;
+
     public AdminEntity() {
     }
 
-    public AdminEntity(String email, String password) {
+    public AdminEntity(String email, String password, ROLE role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public AdminEntity(String id, String email, String password) {
+    public AdminEntity(String id, String email, String password, ROLE role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getId() {
@@ -49,5 +54,13 @@ public class AdminEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ROLE getRole() {
+        return role;
+    }
+
+    public void setRole(ROLE role) {
+        this.role = role;
     }
 }

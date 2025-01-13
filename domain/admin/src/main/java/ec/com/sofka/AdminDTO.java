@@ -4,16 +4,19 @@ public class AdminDTO {
     private String id;
     private String email;
     private String password;
+    private ROLE role;
 
-    public AdminDTO(String id, String email, String password) {
+    public AdminDTO(String id, String email, String password, ROLE role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public AdminDTO(String email, String password) {
+    public AdminDTO(String email, String password, ROLE role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -38,5 +41,13 @@ public class AdminDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public ROLE getRole() {
+        return role;
+    }
+
+    public void setRole(ROLE role) {
+        this.role = role;
     }
 }
