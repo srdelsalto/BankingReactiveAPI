@@ -2,6 +2,7 @@ package ec.com.sofka.router;
 
 import ec.com.sofka.JwtAuthFilter;
 import ec.com.sofka.JwtServiceAdapter;
+import ec.com.sofka.ROLE;
 import ec.com.sofka.SecurityConfig;
 import ec.com.sofka.dto.AdminRequestDTO;
 import ec.com.sofka.exception.GlobalExceptionHandler;
@@ -49,7 +50,7 @@ public class AdminRouterTest {
 
     @BeforeEach
     void init() {
-        validAdminCommand = new AdminRequestDTO("admin@test.com", "securePassword123*");
+        validAdminCommand = new AdminRequestDTO("admin@test.com", "securePassword123*", "GOD");
     }
 
     @Test
@@ -74,7 +75,7 @@ public class AdminRouterTest {
 
     @Test
     void register_InvalidPassword_ReturnsBadRequestWithValidationMessages() {
-        RegisterAdminCommand invalidPasswordCommand = new RegisterAdminCommand("bad_email", "weak");
+        RegisterAdminCommand invalidPasswordCommand = new RegisterAdminCommand("bad_email", "weak", ROLE.ADMIN);
 
         webTestClient.post()
                 .uri("/admin/register")

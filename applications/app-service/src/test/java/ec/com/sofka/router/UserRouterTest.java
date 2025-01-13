@@ -60,11 +60,12 @@ public class UserRouterTest {
     @BeforeEach
     void init() {
         validUserCommand = new UserRequestDTO("John Doe", "12345678");
-        when(jwtService.generateToken(anyString())).thenReturn("test-token");
+        when(jwtService.generateToken(anyString(), anyString())).thenReturn("test-token");
         when(jwtService.isTokenValid(anyString())).thenReturn(true);
         when(jwtService.extractUsername(anyString())).thenReturn("test-user");
+        when(jwtService.extractRole(anyString())).thenReturn("GOD");
 
-        authToken = jwtService.generateToken("test-user");
+        authToken = jwtService.generateToken("test-user", "GOD");
     }
 
     @Test
@@ -81,7 +82,7 @@ public class UserRouterTest {
                 .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.customerId").isEqualTo("675e0e1259d6de4eda5b29b7")
+                .jsonPath("$.id").isEqualTo("675e0e1259d6de4eda5b29b7")
                 .jsonPath("$.name").isEqualTo("John Doe")
                 .jsonPath("$.documentId").isEqualTo("12345678");
 
@@ -139,10 +140,10 @@ public class UserRouterTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$").isArray()
-                .jsonPath("$[0].customerId").isEqualTo("1")
+                .jsonPath("$[0].id").isEqualTo("1")
                 .jsonPath("$[0].name").isEqualTo("John Doe")
                 .jsonPath("$[0].documentId").isEqualTo("12345678")
-                .jsonPath("$[1].customerId").isEqualTo("2")
+                .jsonPath("$[1].id").isEqualTo("2")
                 .jsonPath("$[1].name").isEqualTo("Jane Doe")
                 .jsonPath("$[1].documentId").isEqualTo("87654321");
 

@@ -70,15 +70,15 @@ public class TransactionRouterTest {
                 BigDecimal.valueOf(98.0),
                 TransactionType.ATM_DEPOSIT,
                 LocalDateTime.now(),
-                "675e0e1259d6de4eda5b29a8",
-                "675e0e1259d6de4eda5b29b7"
+                "675e0e1259d6de4eda5b29a8"
         );
 
-        when(jwtService.generateToken(anyString())).thenReturn("test-token");
+        when(jwtService.generateToken(anyString(), anyString())).thenReturn("test-token");
         when(jwtService.isTokenValid(anyString())).thenReturn(true);
         when(jwtService.extractUsername(anyString())).thenReturn("test-user");
+        when(jwtService.extractRole(anyString())).thenReturn("GOD");
 
-        authToken = jwtService.generateToken("test-user");
+        authToken = jwtService.generateToken("test-user", "GOD");
     }
 
     @Test
@@ -140,16 +140,11 @@ public class TransactionRouterTest {
 
         Mono<QueryResponse<TransactionResponse>> response = Mono.just(QueryResponse.ofMultiple(transactionList));
 
-        GetAllByAccountNumberQuery getAllByAccountNumberQuery = new GetAllByAccountNumberQuery("675e0e1259d6de4eda5b29b7", "123456789");
-
-
         when(getAllByAccountNumber.get(any(GetAllByAccountNumberQuery.class))).thenReturn(response);
 
-        webTestClient.post()
-                .uri("/transactions/account")
+        webTestClient.get()
+                .uri("/transactions/{accountNumber}/account", "123456789")
                 .headers(headers -> headers.setBearerAuth(authToken))
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(getAllByAccountNumberQuery)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -163,16 +158,12 @@ public class TransactionRouterTest {
 
     @Test
     void getAllByAccountNumber_accountNotFound_ReturnsNotFound() {
-        GetAllByAccountNumberQuery getAllByAccountNumberQuery = new GetAllByAccountNumberQuery("675e0e1259d6de4eda5b29b7", "9999999");
-
         when(getAllByAccountNumber.get(any(GetAllByAccountNumberQuery.class)))
                 .thenReturn(Mono.error(new NotFoundException("Account not found")));
 
-        webTestClient.post()
-                .uri("/transactions/account")
+        webTestClient.get()
+                .uri("/transactions/{accountNumber}/account", "9999999")
                 .headers(headers -> headers.setBearerAuth(authToken))
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(getAllByAccountNumberQuery)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()

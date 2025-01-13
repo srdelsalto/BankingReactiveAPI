@@ -56,16 +56,17 @@ public class RegisterAdminUseCaseTest {
     @Test
     void shouldRegisterAdminSuccessfullyWhenEmailDoesNotExist() {
         String email = "admin@test.com";
+        String role = "GOD";
         String password = "password123";
         String hashedPassword = "hashedPassword";
         String token = "jwtToken";
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.empty());
         when(passwordHasher.hashPassword(password)).thenReturn(hashedPassword);
-        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN)));
-        when(jwtService.generateToken(email)).thenReturn(token);
+        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword, ROLE.GOD)));
+        when(jwtService.generateToken(email, role)).thenReturn(token);
 
-        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.ADMIN);
+        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.GOD);
 
         StepVerifier.create(useCase.execute(command))
                 .consumeNextWith(response -> {
@@ -79,6 +80,6 @@ public class RegisterAdminUseCaseTest {
         verify(adminRepository, times(1)).findByEmail(email);
         verify(passwordHasher, times(1)).hashPassword(password);
         verify(adminRepository, times(1)).save(any(AdminDTO.class));
-        verify(jwtService, times(1)).generateToken(email);
+        verify(jwtService, times(1)).generateToken(email, role);
     }
 }

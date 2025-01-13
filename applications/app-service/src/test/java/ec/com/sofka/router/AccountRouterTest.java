@@ -64,11 +64,12 @@ public class AccountRouterTest {
     @BeforeEach
     void setUp() {
         accountResponse = new AccountResponse("675e0e1259d6de4eda5b29a8", "12345678", BigDecimal.valueOf(0.0), "675e0e1259d6de4eda5b29b7");
-        when(jwtService.generateToken(anyString())).thenReturn("test-token");
+        when(jwtService.generateToken(anyString(), anyString())).thenReturn("test-token");
         when(jwtService.isTokenValid(anyString())).thenReturn(true);
         when(jwtService.extractUsername(anyString())).thenReturn("test-user");
+        when(jwtService.extractRole(anyString())).thenReturn("GOD");
 
-        authToken = jwtService.generateToken("test-user");
+        authToken = jwtService.generateToken("test-user", "GOD");
     }
 
     @Test
@@ -150,17 +151,13 @@ public class AccountRouterTest {
 
     @Test
     void getByAccountNumber_validAccount_ReturnsAccount() {
-
-        GetAccountByNumberQuery validQuery = new GetAccountByNumberQuery("675e0e1259d6de4eda5b29a8", "12345678");
-
         Mono<QueryResponse<AccountResponse>> response = Mono.just(QueryResponse.ofSingle(accountResponse));
         when(getAccountByNumberUseCase.get(any(GetAccountByNumberQuery.class))).thenReturn(response);
 
-        webTestClient.post()
-                .uri("/accounts/number")
+
+        webTestClient.get()
+                .uri("/accounts/{id}", "12345678")
                 .headers(headers -> headers.setBearerAuth(authToken))
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(validQuery)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -174,16 +171,12 @@ public class AccountRouterTest {
 
     @Test
     void getByAccountNumber_accountNotFound_ReturnsNotFound() {
-        GetAccountByNumberQuery validQuery = new GetAccountByNumberQuery("675e0e1259d6de4eda5b29a8", "9999999");
-
         when(getAccountByNumberUseCase.get(any(GetAccountByNumberQuery.class)))
                 .thenReturn(Mono.error(new NotFoundException("Account not found")));
 
-        webTestClient.post()
-                .uri("/accounts/number")
+        webTestClient.get()
+                .uri("/accounts/{id}", "9999999")
                 .headers(headers -> headers.setBearerAuth(authToken))
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(validQuery)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()

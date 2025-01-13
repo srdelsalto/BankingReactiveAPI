@@ -56,7 +56,7 @@ public class LoginAdminUseCaseTest {
         String password = "wrongPassword";
         String hashedPassword = "hashedPassword";
 
-        AdminDTO adminDTO = new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN);
+        AdminDTO adminDTO = new AdminDTO("admin-1", email, hashedPassword, ROLE.GOD);
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.just(adminDTO));
         when(passwordHasher.verifyPassword(password, hashedPassword)).thenReturn(false);
@@ -80,12 +80,13 @@ public class LoginAdminUseCaseTest {
         String password = "password123";
         String hashedPassword = "hashedPassword";
         String token = "jwtToken";
+        String role = "GOD";
 
-        AdminDTO adminDTO = new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN);
+        AdminDTO adminDTO = new AdminDTO("admin-1", email, hashedPassword, ROLE.GOD);
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.just(adminDTO));
         when(passwordHasher.verifyPassword(password, hashedPassword)).thenReturn(true);
-        when(jwtService.generateToken(email)).thenReturn(token);
+        when(jwtService.generateToken(email, role)).thenReturn(token);
 
         LoginAdminCommand command = new LoginAdminCommand(email, password);
 
@@ -100,6 +101,6 @@ public class LoginAdminUseCaseTest {
 
         verify(adminRepository, times(1)).findByEmail(email);
         verify(passwordHasher, times(1)).verifyPassword(password, hashedPassword);
-        verify(jwtService, times(1)).generateToken(email);
+        verify(jwtService, times(1)).generateToken(email, role);
     }
 }
