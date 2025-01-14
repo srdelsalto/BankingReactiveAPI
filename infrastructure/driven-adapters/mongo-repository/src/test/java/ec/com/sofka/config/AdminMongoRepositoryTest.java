@@ -1,5 +1,6 @@
 package ec.com.sofka.config;
 
+import ec.com.sofka.ROLE;
 import ec.com.sofka.TestMongoConfig;
 import ec.com.sofka.data.AdminEntity;
 import ec.com.sofka.database.bank.AdminMongoRepository;
@@ -30,8 +31,8 @@ public class AdminMongoRepositoryTest {
 
     @BeforeAll
     void setup() {
-        admin1 = new AdminEntity("admin1@example.com", "password1");
-        admin2 = new AdminEntity("admin2@example.com", "password2");
+        admin1 = new AdminEntity("admin1@example.com", "password1", ROLE.GOD);
+        admin2 = new AdminEntity("admin2@example.com", "password2", ROLE.GOD);
     }
 
     @BeforeEach
@@ -56,7 +57,7 @@ public class AdminMongoRepositoryTest {
 
     @Test
     void save_shouldPersistAdmin() {
-        AdminEntity newAdmin = new AdminEntity("admin3@example.com", "password3");
+        AdminEntity newAdmin = new AdminEntity("admin3@example.com", "password3", ROLE.GOD);
 
         StepVerifier.create(adminRepository.save(newAdmin))
                 .expectNextMatches(admin -> admin.getEmail().equals("admin3@example.com"))

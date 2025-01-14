@@ -47,7 +47,7 @@ class GetAccountByNumberUseCaseTest {
                     AccountResponse accountResponse = response.getSingleResult().get();
                     assert accountResponse.getId().equals(id);
                     assert accountResponse.getAccountNumber().equals(accountNumber);
-                    assert accountResponse.getBalance().compareTo(new BigDecimal("1500.00")) == 0;
+                    assert accountResponse.getBalance().compareTo(balance) == 0;
                     assert accountResponse.getUserId().equals(userId);
                 })
                 .verifyComplete();

@@ -76,8 +76,8 @@ class GetAllByAccountNumberUseCaseTest {
                 accountNumber
         );
 
-        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Mono.just(accountCreated));
-        when(transactionRepository.getAllByAccountId(accountNumber)).thenReturn(Flux.just(transactionCreated));
+        when(accountRepository.findByAccountNumber(anyString())).thenReturn(Mono.just(accountCreated));
+        when(transactionRepository.getAllByAccountId(anyString())).thenReturn(Flux.just(transactionCreated));
 
         GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(accountNumber);
 
@@ -92,8 +92,8 @@ class GetAllByAccountNumberUseCaseTest {
                 )
                 .verifyComplete();
 
-        verify(accountRepository, times(1)).findByAccountNumber(accountNumber);
-        verify(transactionRepository, times(1)).getAllByAccountId(accountNumber);
+        verify(accountRepository, times(1)).findByAccountNumber(anyString());
+        verify(transactionRepository, times(1)).getAllByAccountId(anyString());
     }
 
     @Test
@@ -108,8 +108,8 @@ class GetAllByAccountNumberUseCaseTest {
                 userId
         );
 
-        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Mono.just(accountCreated));
-        when(transactionRepository.getAllByAccountId(accountNumber)).thenReturn(Flux.empty());
+        when(accountRepository.findByAccountNumber(anyString())).thenReturn(Mono.just(accountCreated));
+        when(transactionRepository.getAllByAccountId(anyString())).thenReturn(Flux.empty());
 
         GetAllByAccountNumberQuery request = new GetAllByAccountNumberQuery(accountNumber);
 
@@ -117,8 +117,8 @@ class GetAllByAccountNumberUseCaseTest {
                 .expectNextMatches(Objects::nonNull)
                 .verifyComplete();
 
-        verify(accountRepository, times(1)).findByAccountNumber(accountNumber);
-        verify(transactionRepository, times(1)).getAllByAccountId(accountNumber);
+        verify(accountRepository, times(1)).findByAccountNumber(anyString());
+        verify(transactionRepository, times(1)).getAllByAccountId(anyString());
     }
 
 }
