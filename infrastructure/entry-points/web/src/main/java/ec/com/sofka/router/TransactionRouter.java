@@ -77,7 +77,7 @@ public class TransactionRouter {
                     )
             ),
             @RouterOperation(
-                    path = "/transactions/account",
+                    path = "/transactions/{accountNumber}/account",
                     operation = @Operation(
                             tags = {"Transactions"},
                             operationId = "getAllByUserId",

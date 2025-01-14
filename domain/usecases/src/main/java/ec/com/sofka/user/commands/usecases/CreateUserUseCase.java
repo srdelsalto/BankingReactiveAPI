@@ -40,9 +40,10 @@ public class CreateUserUseCase implements IUseCaseExecute<CreateUserCommand, Use
                     customer.markEventsAsCommitted();
 
                     return Mono.just(new UserResponse(
-                            customer.getId().getValue(),
+                            customer.getUser().getId().getValue(),
                             customer.getUser().getName().getValue(),
-                            customer.getUser().getDocumentId().getValue()
+                            customer.getUser().getDocumentId().getValue(),
+                            customer.getId().getValue()
                     ));
                 }));
     }
