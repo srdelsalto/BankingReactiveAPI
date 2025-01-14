@@ -29,7 +29,7 @@ public class UserHandler {
         return getAllUserViewUseCase.get()
                 .map(queryResponse -> queryResponse.getMultipleResults()
                         .stream()
-                        .map(UserMapper::fromEntity)
+                        .map(UserMapper::fromQueryEntity)
                         .toList())
                 .flatMap(userResponseDTOs ->
                         ServerResponse
