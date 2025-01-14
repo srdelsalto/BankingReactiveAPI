@@ -1,11 +1,10 @@
-package ec.com.sofka.user;
+package ec.com.sofka.user.commands;
 
 import ec.com.sofka.ConflictException;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.gateway.dto.UserDTO;
 import ec.com.sofka.generics.domain.DomainEvent;
-import ec.com.sofka.user.commands.CreateUserCommand;
 import ec.com.sofka.user.commands.usecases.CreateUserUseCase;
 import ec.com.sofka.user.queries.query.GetUserByDocumentQuery;
 import ec.com.sofka.user.queries.usecases.GetUserByDocumentViewUseCase;

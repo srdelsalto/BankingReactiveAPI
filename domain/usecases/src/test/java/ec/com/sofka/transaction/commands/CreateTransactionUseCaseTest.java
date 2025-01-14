@@ -1,4 +1,4 @@
-package ec.com.sofka.transaction;
+package ec.com.sofka.transaction.commands;
 
 import ec.com.sofka.ATMDepositStrategy;
 import ec.com.sofka.ATMWithdrawalStrategy;
@@ -10,10 +10,9 @@ import ec.com.sofka.gateway.IEventStore;
 import ec.com.sofka.gateway.dto.AccountDTO;
 import ec.com.sofka.gateway.dto.TransactionDTO;
 import ec.com.sofka.generics.domain.DomainEvent;
-import ec.com.sofka.transaction.commands.CreateTransactionCommand;
+import ec.com.sofka.transaction.TransactionType;
 import ec.com.sofka.transaction.commands.usecases.CreateTransactionUseCase;
 import ec.com.sofka.transaction.queries.responses.TransactionResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

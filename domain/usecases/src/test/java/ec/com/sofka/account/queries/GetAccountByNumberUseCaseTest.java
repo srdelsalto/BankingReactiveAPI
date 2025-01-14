@@ -1,4 +1,4 @@
-package ec.com.sofka.account;
+package ec.com.sofka.account.queries;
 
 import ec.com.sofka.NotFoundException;
 import ec.com.sofka.account.queries.query.GetAccountByNumberQuery;

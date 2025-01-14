@@ -1,4 +1,4 @@
-package ec.com.sofka.transaction;
+package ec.com.sofka.transaction.queries;
 
 
 import ec.com.sofka.NotFoundException;
@@ -6,6 +6,7 @@ import ec.com.sofka.gateway.AccountRepository;
 import ec.com.sofka.gateway.TransactionRepository;
 import ec.com.sofka.gateway.dto.AccountDTO;
 import ec.com.sofka.gateway.dto.TransactionDTO;
+import ec.com.sofka.transaction.TransactionType;
 import ec.com.sofka.transaction.queries.query.GetAllByAccountNumberQuery;
 import ec.com.sofka.transaction.queries.usecases.GetAllByAccountNumberViewUseCase;
 import org.junit.jupiter.api.Test;

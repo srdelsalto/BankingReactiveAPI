@@ -1,4 +1,4 @@
-package ec.com.sofka.account;
+package ec.com.sofka.account.queries;
 
 import ec.com.sofka.account.queries.query.GetAllByUserIdQuery;
 import ec.com.sofka.account.queries.responses.AccountResponse;

@@ -1,7 +1,6 @@
-package ec.com.sofka.account;
+package ec.com.sofka.account.commands;
 
 import ec.com.sofka.NotFoundException;
-import ec.com.sofka.account.commands.CreateAccountCommand;
 import ec.com.sofka.account.commands.usecases.CreateAccountUseCase;
 import ec.com.sofka.aggregate.customer.events.UserCreated;
 import ec.com.sofka.gateway.BusEvent;

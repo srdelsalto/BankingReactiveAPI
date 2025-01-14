@@ -1,6 +1,5 @@
-package ec.com.sofka.user;
+package ec.com.sofka.user.queries;
 
-import ec.com.sofka.aggregate.customer.events.UserCreated;
 import ec.com.sofka.gateway.UserRepository;
 import ec.com.sofka.gateway.dto.UserDTO;
 import ec.com.sofka.user.queries.usecases.GetAllUserViewUseCase;
