@@ -5,20 +5,20 @@ import jakarta.validation.constraints.NotBlank;
 public class AccountRequestDTO {
 
     @NotBlank(message = "UserId cannot be blank")
-    private String aggregateId;
+    private String userId;
 
     public AccountRequestDTO() {
     }
 
-    public AccountRequestDTO(String aggregateId) {
-        this.aggregateId = aggregateId;
+    public AccountRequestDTO(String userId) {
+        this.userId = userId;
     }
 
-    public String getAggregateId() {
-        return aggregateId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setAggregateId(String aggregateId) {
-        this.aggregateId = aggregateId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

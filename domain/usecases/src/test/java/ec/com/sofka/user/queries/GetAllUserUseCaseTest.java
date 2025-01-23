@@ -34,10 +34,10 @@ class GetAllUserUseCaseTest {
         StepVerifier.create(useCase.get())
                 .expectNextMatches(response ->
                         response.getMultipleResults().get(0).getId().equals("user1") &&
-                                response.getMultipleResults().get(0).getName().equals("John Doe") && // Ajustado aquí
+                                response.getMultipleResults().get(0).getName().equals("John Doe") &&
                                 response.getMultipleResults().get(0).getDocumentId().equals("DOC001") &&
                                 response.getMultipleResults().get(1).getId().equals("user2") &&
-                                response.getMultipleResults().get(1).getName().equals("Jane Doe") && // Ajustado aquí
+                                response.getMultipleResults().get(1).getName().equals("Jane Doe") &&
                                 response.getMultipleResults().get(1).getDocumentId().equals("DOC002")
                 )
                 .verifyComplete();

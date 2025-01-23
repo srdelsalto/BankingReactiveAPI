@@ -4,13 +4,9 @@ import ec.com.sofka.NotFoundException;
 import ec.com.sofka.account.queries.query.GetAccountByNumberQuery;
 
 import ec.com.sofka.account.queries.responses.AccountResponse;
-import ec.com.sofka.aggregate.customer.Customer;
 import ec.com.sofka.gateway.AccountRepository;
-import ec.com.sofka.gateway.IEventStore;
-import ec.com.sofka.generics.domain.DomainEvent;
 import ec.com.sofka.generics.interfaces.IUseCaseGet;
 import ec.com.sofka.generics.utils.QueryResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class GetAccountByNumberViewUseCase implements IUseCaseGet<GetAccountByNumberQuery, AccountResponse> {

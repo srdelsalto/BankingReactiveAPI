@@ -1,11 +1,11 @@
 package ec.com.sofka.mapper;
 
 import ec.com.sofka.account.commands.CreateAccountCommand;
-import ec.com.sofka.account.queries.query.GetAccountByNumberQuery;
 import ec.com.sofka.account.queries.responses.AccountResponse;
+import ec.com.sofka.account.queries.responses.AccountUserResponse;
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AccountResponseDTO;
-import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
+import ec.com.sofka.dto.AccountUserResponseDTO;
 
 public class AccountMapper {
     public static AccountResponseDTO fromEntity(AccountResponse accountResponse) {
@@ -17,10 +17,16 @@ public class AccountMapper {
     }
 
     public static CreateAccountCommand toEntity(AccountRequestDTO accountRequestDTO) {
-        return new CreateAccountCommand(accountRequestDTO.getAggregateId());
+        return new CreateAccountCommand(accountRequestDTO.getUserId());
     }
 
-    public static GetAccountByNumberQuery toAccountByNumberQuery(GetAccountByNumberRequestDTO getAccountByNumberRequestDTO) {
-        return new GetAccountByNumberQuery(getAccountByNumberRequestDTO.getAccountNumber());
+    public static AccountUserResponseDTO fromEntityWithUser(AccountUserResponse accountUserResponse){
+        return new AccountUserResponseDTO(
+                accountUserResponse.getId(),
+                accountUserResponse.getAccountNumber(),
+                accountUserResponse.getBalance(),
+                accountUserResponse.getUserId(),
+                accountUserResponse.getUserResponse()
+        );
     }
 }

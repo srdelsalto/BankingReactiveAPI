@@ -5,6 +5,9 @@ import ec.com.sofka.NotFoundException;
 import ec.com.sofka.TransactionStrategy;
 import ec.com.sofka.TransactionStrategyFactory;
 import ec.com.sofka.aggregate.customer.Customer;
+import ec.com.sofka.aggregate.customer.events.AccountCreated;
+import ec.com.sofka.aggregate.customer.events.EventsEnum;
+import ec.com.sofka.aggregate.customer.events.UserCreated;
 import ec.com.sofka.aggregate.operation.Operation;
 import ec.com.sofka.gateway.BusEvent;
 import ec.com.sofka.gateway.IEventStore;
@@ -32,73 +35,81 @@ public class CreateTransactionUseCase implements IUseCaseExecute<CreateTransacti
 
     @Override
     public Mono<TransactionResponse> execute(CreateTransactionCommand cmd) {
-        Flux<DomainEvent> eventsCustomer = repository.findAggregate(cmd.getCustomerId(), "customer");
+        Mono<AccountCreated> accountCreatedEvent = repository.findAllAggregateByEvent("customer", EventsEnum.ACCOUNT_CREATED.name())
+                .switchIfEmpty(Mono.empty())
+                .map(event -> (AccountCreated) event)
+                .filter(event -> event.getAccountNumber().equals(cmd.getAccountNumber()))
+                .single();
 
-        return Customer.from(cmd.getCustomerId(), eventsCustomer)
-                .flatMap(customer -> Mono.justOrEmpty(
-                                customer.getAccounts().stream()
-                                        .filter(account -> account.getAccountNumber().getValue().equals(cmd.getAccountNumber()))
-                                        .findFirst()
-                        )
-                        .switchIfEmpty(Mono.error(new NotFoundException("Account not found")))
-                        .flatMap(account -> {
-                            AccountDTO accountDTO = new AccountDTO(
-                                    account.getId().getValue(),
-                                    account.getAccountNumber().getValue(),
-                                    account.getBalance().getValue(),
-                                    account.getUserId().getValue()
-                            );
+        return accountCreatedEvent.flatMap(accountCreated -> {
+            Flux<DomainEvent> eventsCustomer = repository.findAggregate(accountCreated.getAggregateRootId(), "customer");
 
-                            Operation operation = new Operation();
+            return Customer.from(accountCreated.getAggregateRootId(), eventsCustomer)
+                    .flatMap(customer -> Mono.justOrEmpty(
+                                    customer.getAccounts().stream()
+                                            .filter(account -> account.getAccountNumber().getValue().equals(cmd.getAccountNumber()))
+                                            .findFirst()
+                            )
+                            .switchIfEmpty(Mono.error(new NotFoundException("Account not found")))
+                            .flatMap(account -> {
+                                AccountDTO accountDTO = new AccountDTO(
+                                        account.getId().getValue(),
+                                        account.getAccountNumber().getValue(),
+                                        account.getBalance().getValue(),
+                                        account.getUserId().getValue()
+                                );
 
-                            TransactionStrategy strategy = strategyFactory.getStrategy(cmd.getType());
-                            BigDecimal fee = strategy.calculateFee();
-                            BigDecimal netAmount = cmd.getAmount().add(fee);
-                            BigDecimal balance = strategy.calculateBalance(accountDTO.getBalance(), cmd.getAmount());
+                                Operation operation = new Operation();
 
-                            if (balance.compareTo(BigDecimal.ZERO) < 0) {
-                                throw new BadRequestException("Insufficient balance for this transaction.");
-                            }
+                                TransactionStrategy strategy = strategyFactory.getStrategy(cmd.getType());
+                                BigDecimal fee = strategy.calculateFee();
+                                BigDecimal netAmount = cmd.getAmount().add(fee);
+                                BigDecimal balance = strategy.calculateBalance(accountDTO.getBalance(), cmd.getAmount());
 
-                            operation.createTransaction(
-                                    cmd.getAmount(),
-                                    fee,
-                                    netAmount,
-                                    LocalDateTime.now(),
-                                    cmd.getType(),
-                                    accountDTO.getId()
-                            );
+                                if (balance.compareTo(BigDecimal.ZERO) < 0) {
+                                    throw new BadRequestException("Insufficient balance for this transaction.");
+                                }
 
-                            operation.getUncommittedEvents()
-                                    .stream()
-                                    .map(repository::save)
-                                    .forEach(busEvent::sendEventTransactionCreated);
+                                operation.createTransaction(
+                                        cmd.getAmount(),
+                                        fee,
+                                        netAmount,
+                                        LocalDateTime.now(),
+                                        cmd.getType(),
+                                        accountDTO.getId()
+                                );
 
-                            operation.markEventsAsCommitted();
+                                operation.getUncommittedEvents()
+                                        .stream()
+                                        .map(repository::save)
+                                        .forEach(busEvent::sendEventTransactionCreated);
 
-                            customer.updateAccountBalance(
-                                    accountDTO.getId(),
-                                    balance,
-                                    accountDTO.getAccountNumber(),
-                                    accountDTO.getUserId()
-                            );
+                                operation.markEventsAsCommitted();
 
-                            customer.getUncommittedEvents()
-                                    .stream()
-                                    .map(repository::save)
-                                    .forEach(busEvent::sendEventAccountUpdated);
+                                customer.updateAccountBalance(
+                                        accountDTO.getId(),
+                                        balance,
+                                        accountDTO.getAccountNumber(),
+                                        accountDTO.getUserId()
+                                );
 
-                            customer.markEventsAsCommitted();
+                                customer.getUncommittedEvents()
+                                        .stream()
+                                        .map(repository::save)
+                                        .forEach(busEvent::sendEventAccountUpdated);
 
-                            return Mono.just(new TransactionResponse(
-                                    operation.getId().getValue(),
-                                    operation.getTransaction().getAmount().getValue(),
-                                    operation.getTransaction().getFee().getValue(),
-                                    operation.getTransaction().getNetAmount().getValue(),
-                                    operation.getTransaction().getType().getValue(),
-                                    operation.getTransaction().getTimestamp().getValue(),
-                                    operation.getTransaction().getAccountId().getValue()
-                            ));
-                        }));
+                                customer.markEventsAsCommitted();
+
+                                return Mono.just(new TransactionResponse(
+                                        operation.getId().getValue(),
+                                        operation.getTransaction().getAmount().getValue(),
+                                        operation.getTransaction().getFee().getValue(),
+                                        operation.getTransaction().getNetAmount().getValue(),
+                                        operation.getTransaction().getType().getValue(),
+                                        operation.getTransaction().getTimestamp().getValue(),
+                                        operation.getTransaction().getAccountId().getValue()
+                                ));
+                            }));
+        });
     }
 }

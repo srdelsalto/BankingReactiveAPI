@@ -1,8 +1,6 @@
 package ec.com.sofka.handler;
 
-import ec.com.sofka.dto.GetTransactionByAccountRequestDTO;
 import ec.com.sofka.dto.TransactionRequestDTO;
-import ec.com.sofka.generics.utils.QueryResponse;
 import ec.com.sofka.mapper.TransactionMapper;
 import ec.com.sofka.transaction.commands.usecases.CreateTransactionUseCase;
 import ec.com.sofka.transaction.queries.query.GetAllByAccountNumberQuery;

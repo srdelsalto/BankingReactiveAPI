@@ -7,4 +7,5 @@ import reactor.core.publisher.Flux;
 public interface IEventMongoRepository extends ReactiveMongoRepository<EventEntity, String> {
     Flux<EventEntity> findAllByAggregateId(String aggregateId);
     Flux<EventEntity> findAllByAggregateRootName(String aggregateRootName);
+    Flux<EventEntity> findAllByAggregateRootNameAndEventType(String aggregateRootName, String eventType);
 }

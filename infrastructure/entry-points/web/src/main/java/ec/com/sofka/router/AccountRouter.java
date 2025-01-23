@@ -2,7 +2,6 @@ package ec.com.sofka.router;
 
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AccountResponseDTO;
-import ec.com.sofka.dto.GetAccountByNumberRequestDTO;
 import ec.com.sofka.exception.ErrorResponse;
 import ec.com.sofka.handler.AccountHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -132,7 +131,8 @@ public class AccountRouter {
         return RouterFunctions
                 .route(RequestPredicates.GET("/accounts/{id}"), accountHandler::getByAccountNumber)
                 .andRoute(RequestPredicates.POST("/accounts").and(accept(MediaType.APPLICATION_JSON)), accountHandler::create)
-                .andRoute(RequestPredicates.GET("/accounts/{userId}/user"), accountHandler::getAllByUserId);
+                .andRoute(RequestPredicates.GET("/accounts/{userId}/user"), accountHandler::getAllByUserId)
+                .andRoute(RequestPredicates.GET("/accounts"), accountHandler::getAll);
     }
 
 }

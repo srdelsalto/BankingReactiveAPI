@@ -8,14 +8,12 @@ import java.math.BigDecimal;
 public class CreateTransactionCommand extends Command {
     private final BigDecimal amount;
     private final TransactionType type;
-    private final String customerId;
     private final String accountNumber;
 
-    public CreateTransactionCommand(BigDecimal amount, TransactionType type, String accountNumber, String customerId) {
+    public CreateTransactionCommand(BigDecimal amount, TransactionType type, String accountNumber) {
         super(null);
         this.amount = amount;
         this.type = type;
-        this.customerId = customerId;
         this.accountNumber = accountNumber;
     }
 
@@ -25,10 +23,6 @@ public class CreateTransactionCommand extends Command {
 
     public TransactionType getType() {
         return type;
-    }
-
-    public String getCustomerId() {
-        return customerId;
     }
 
     public String getAccountNumber() {
