@@ -8,7 +8,7 @@ import ec.com.sofka.usecases.command.RegisterAdminCommand;
 
 public class AdminMapper {
     public static RegisterAdminCommand toRegisterCommand(AdminRequestDTO adminRequestDTO) {
-        return new RegisterAdminCommand(adminRequestDTO.getEmail(), adminRequestDTO.getPassword(), ROLE.valueOf(adminRequestDTO.getRole()));
+        return new RegisterAdminCommand(adminRequestDTO.getEmail(), adminRequestDTO.getPassword(), ROLE.valueOf(adminRequestDTO.getRole()), adminRequestDTO.getDocumentId());
     }
 
     public static LoginAdminCommand toLoginCommand(LoginRequestDTO adminRequestDTO) {

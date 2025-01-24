@@ -42,13 +42,11 @@ public class SecurityConfig {
                 )
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/admin/**", "/webjars/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers( "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**", "/admin/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/users/**", "/transactions/**", "/accounts/**")
                         .hasAnyRole("GOD", "ADMIN")
-
                         .pathMatchers(HttpMethod.POST, "/users/**", "/transactions/**", "/accounts/**")
                         .hasRole("GOD")
-
                         .anyExchange().authenticated()
                 )
                 .build();

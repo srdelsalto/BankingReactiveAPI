@@ -2,11 +2,13 @@ package ec.com.sofka.router;
 
 import ec.com.sofka.dto.AccountRequestDTO;
 import ec.com.sofka.dto.AccountResponseDTO;
+import ec.com.sofka.dto.AccountResponseListDTO;
 import ec.com.sofka.exception.ErrorResponse;
 import ec.com.sofka.handler.AccountHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -16,6 +18,7 @@ import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
@@ -36,6 +39,7 @@ public class AccountRouter {
     @RouterOperations({
             @RouterOperation(
                     path = "/accounts",
+                    method = RequestMethod.POST,
                     operation = @Operation(
                             tags = {"Accounts"},
                             operationId = "create",
@@ -87,7 +91,10 @@ public class AccountRouter {
                                     @ApiResponse(
                                             responseCode = "200",
                                             description = "Successfully retrieved the list of accounts",
-                                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountResponseDTO.class))
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    array = @ArraySchema(schema = @Schema(implementation = AccountResponseDTO.class))
+                                            )
                                     ),
                                     @ApiResponse(
                                             responseCode = "400",
@@ -125,14 +132,39 @@ public class AccountRouter {
                                     )
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/accounts",
+                    method = RequestMethod.GET,
+                    operation = @Operation(
+                            tags = {"Accounts"},
+                            operationId = "getAll",
+                            summary = "Get all accounts",
+                            description = "Retrieve a list of all existing bank accounts.",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Successfully retrieved the list of accounts",
+                                            content = @Content(
+                                                    mediaType = "application/json",
+                                                    array = @ArraySchema(schema = @Schema(implementation = AccountResponseDTO.class))
+                                            )
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "500",
+                                            description = "Internal server error",
+                                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+                                    )
+                            }
+                    )
             )
     })
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/accounts/{id}"), accountHandler::getByAccountNumber)
+                .route(RequestPredicates.GET("/accounts"), accountHandler::getAll)
                 .andRoute(RequestPredicates.POST("/accounts").and(accept(MediaType.APPLICATION_JSON)), accountHandler::create)
-                .andRoute(RequestPredicates.GET("/accounts/{userId}/user"), accountHandler::getAllByUserId)
-                .andRoute(RequestPredicates.GET("/accounts"), accountHandler::getAll);
+                .andRoute(RequestPredicates.GET("/accounts/{id}"), accountHandler::getByAccountNumber)
+                .andRoute(RequestPredicates.GET("/accounts/{userId}/user"), accountHandler::getAllByUserId);
     }
 
 }

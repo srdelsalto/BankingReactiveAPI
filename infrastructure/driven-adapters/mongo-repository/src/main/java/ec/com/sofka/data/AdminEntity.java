@@ -15,14 +15,16 @@ public class AdminEntity {
     private String password;
 
     private ROLE role;
+    private String documentId;
 
     public AdminEntity() {
     }
 
-    public AdminEntity(String email, String password, ROLE role) {
+    public AdminEntity(String email, String password, ROLE role, String documentId) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.documentId = documentId;
     }
 
     public AdminEntity(String id, String email, String password, ROLE role) {
@@ -30,6 +32,14 @@ public class AdminEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public AdminEntity(String id, String email, String password, ROLE role, String documentId) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.documentId = documentId;
     }
 
     public String getId() {
@@ -62,5 +72,12 @@ public class AdminEntity {
 
     public void setRole(ROLE role) {
         this.role = role;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

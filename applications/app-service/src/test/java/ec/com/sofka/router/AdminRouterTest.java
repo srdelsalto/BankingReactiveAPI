@@ -50,12 +50,12 @@ public class AdminRouterTest {
 
     @BeforeEach
     void init() {
-        validAdminCommand = new AdminRequestDTO("admin@test.com", "securePassword123*", "GOD");
+        validAdminCommand = new AdminRequestDTO("admin@test.com", "securePassword123*", "GOD", "1724567522");
     }
 
     @Test
     void create_ValidAdmin_ReturnsCreatedResponse() {
-        AdminResponse adminResponse = new AdminResponse("123456", "admin@test.com", "generated-jwt-token");
+        AdminResponse adminResponse = new AdminResponse("123456", "admin@test.com", "generated-jwt-token", "1724567522");
         when(registerAdminUseCase.execute(any(RegisterAdminCommand.class))).thenReturn(Mono.just(adminResponse));
 
         webTestClient.post()
@@ -75,7 +75,7 @@ public class AdminRouterTest {
 
     @Test
     void register_InvalidPassword_ReturnsBadRequestWithValidationMessages() {
-        RegisterAdminCommand invalidPasswordCommand = new RegisterAdminCommand("bad_email", "weak", ROLE.ADMIN);
+        RegisterAdminCommand invalidPasswordCommand = new RegisterAdminCommand("bad_email", "weak", ROLE.ADMIN, "1724567522");
 
         webTestClient.post()
                 .uri("/admin/register")
@@ -89,7 +89,7 @@ public class AdminRouterTest {
 
     @Test
     void login_ValidAdmin_ReturnsCreatedResponse() {
-        AdminResponse adminResponse = new AdminResponse("123456", "admin@test.com", "generated-jwt-token");
+        AdminResponse adminResponse = new AdminResponse("123456", "admin@test.com", "generated-jwt-token", "1724567522");
         when(loginAdminUseCase.execute(any(LoginAdminCommand.class))).thenReturn(Mono.just(adminResponse));
 
         webTestClient.post()

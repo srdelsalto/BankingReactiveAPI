@@ -13,7 +13,7 @@ public class AdminRequestDTO {
 
     @NotBlank(message = "Password cannot be blank")
     @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&.#])[A-Za-z\\d@$!%*?&.#]{8,}$",
             message = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
     )
     private String password;
@@ -22,10 +22,18 @@ public class AdminRequestDTO {
     @Pattern(regexp = "ADMIN|USER|GOD", message = "Invalid role")
     private String role;
 
-    public AdminRequestDTO(String email, String password, String role) {
+    @NotBlank(message = "Document ID cannot be blank")
+    @Pattern(
+            regexp = "^[0-9]{10,}$",
+            message = "The field must contain only numbers and be at least 10 digits long"
+    )
+    private String documentId;
+
+    public AdminRequestDTO(String email, String password, String role, String documentId) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.documentId = documentId;
     }
 
     public String getEmail() {
@@ -39,4 +47,5 @@ public class AdminRequestDTO {
     public String getRole() {
         return role;
     }
+    public String getDocumentId() { return documentId; }
 }

@@ -25,10 +25,10 @@ public class RegisterAdminUseCase {
                 .flatMap(existingAdmin -> Mono.<AdminResponse>error(new ConflictException("Admin already exists")))
                 .switchIfEmpty(Mono.defer(() -> {
                             String hashedPassword = passwordHasher.hashPassword(registerAdminCommand.getPassword());
-                            return adminRepository.save(new AdminDTO(registerAdminCommand.getEmail(), hashedPassword, registerAdminCommand.getRole()))
+                            return adminRepository.save(new AdminDTO(registerAdminCommand.getEmail(), hashedPassword, registerAdminCommand.getRole(), registerAdminCommand.getDocumentId()))
                                     .map(savedAdmin -> {
                                         String token = jwtService.generateToken(savedAdmin.getEmail(), savedAdmin.getRole().name());
-                                        return new AdminResponse(savedAdmin.getId(), savedAdmin.getEmail(), token);
+                                        return new AdminResponse(savedAdmin.getId(), savedAdmin.getEmail(), token, savedAdmin.getDocumentId());
                                     });
                         })
                 );

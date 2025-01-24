@@ -5,18 +5,21 @@ public class AdminDTO {
     private String email;
     private String password;
     private ROLE role;
+    private String documentId;
 
-    public AdminDTO(String id, String email, String password, ROLE role) {
+    public AdminDTO(String id, String email, String password, ROLE role, String documentId) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.documentId = documentId;
     }
 
-    public AdminDTO(String email, String password, ROLE role) {
+    public AdminDTO(String email, String password, ROLE role, String documentId) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.documentId = documentId;
     }
 
     public String getEmail() {
@@ -50,4 +53,6 @@ public class AdminDTO {
     public void setRole(ROLE role) {
         this.role = role;
     }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
 }

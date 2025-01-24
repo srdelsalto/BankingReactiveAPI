@@ -28,7 +28,7 @@ public class LoginAdminUseCase {
                         throw new AccessDeniedException("Bad credentials");
                     }
                     String token = jwtService.generateToken(adminDTO.getEmail(), adminDTO.getRole().name());
-                    return new AdminResponse(adminDTO.getId(), adminDTO.getEmail(), token);
+                    return new AdminResponse(adminDTO.getId(), adminDTO.getEmail(), token, adminDTO.getDocumentId());
                 });
     }
 

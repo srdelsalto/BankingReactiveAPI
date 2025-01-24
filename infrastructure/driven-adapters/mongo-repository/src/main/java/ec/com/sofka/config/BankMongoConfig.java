@@ -25,7 +25,7 @@ public class BankMongoConfig {
     @Bean(name = "bankDatabaseFactory")
     public ReactiveMongoDatabaseFactory bankDatabaseFactory() {
         MongoClient mongoClient = MongoClients.create(bankMongoUri);
-        return new SimpleReactiveMongoDatabaseFactory(mongoClient, "bank");
+        return new SimpleReactiveMongoDatabaseFactory(mongoClient, "bank_account_v2");
     }
 
     @Primary

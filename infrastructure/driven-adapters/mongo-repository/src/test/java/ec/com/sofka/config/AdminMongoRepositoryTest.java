@@ -31,8 +31,8 @@ public class AdminMongoRepositoryTest {
 
     @BeforeAll
     void setup() {
-        admin1 = new AdminEntity("admin1@example.com", "password1", ROLE.GOD);
-        admin2 = new AdminEntity("admin2@example.com", "password2", ROLE.GOD);
+        admin1 = new AdminEntity("admin1@example.com", "password1", ROLE.GOD, "1724567522");
+        admin2 = new AdminEntity("admin2@example.com", "password2", ROLE.GOD, "1724567522");
     }
 
     @BeforeEach
@@ -57,7 +57,7 @@ public class AdminMongoRepositoryTest {
 
     @Test
     void save_shouldPersistAdmin() {
-        AdminEntity newAdmin = new AdminEntity("admin3@example.com", "password3", ROLE.GOD);
+        AdminEntity newAdmin = new AdminEntity("admin3@example.com", "password3", ROLE.GOD, "1724567522");
 
         StepVerifier.create(adminRepository.save(newAdmin))
                 .expectNextMatches(admin -> admin.getEmail().equals("admin3@example.com"))

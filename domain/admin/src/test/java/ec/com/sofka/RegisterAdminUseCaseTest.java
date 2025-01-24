@@ -37,11 +37,11 @@ public class RegisterAdminUseCaseTest {
         String password = "password123";
         String hashedPassword = "hashedPassword";
 
-        AdminDTO existingAdmin = new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN);
+        AdminDTO existingAdmin = new AdminDTO("admin-1", email, hashedPassword, ROLE.ADMIN, "0701283343");
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.just(existingAdmin));
 
-        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.ADMIN);
+        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.ADMIN, "1724576522");
 
         StepVerifier.create(useCase.execute(command))
                 .expectErrorMatches(throwable ->
@@ -63,10 +63,10 @@ public class RegisterAdminUseCaseTest {
 
         when(adminRepository.findByEmail(email)).thenReturn(Mono.empty());
         when(passwordHasher.hashPassword(password)).thenReturn(hashedPassword);
-        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword, ROLE.GOD)));
+        when(adminRepository.save(any(AdminDTO.class))).thenReturn(Mono.just(new AdminDTO("admin-1", email, hashedPassword, ROLE.GOD, "0701283343")));
         when(jwtService.generateToken(email, role)).thenReturn(token);
 
-        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.GOD);
+        RegisterAdminCommand command = new RegisterAdminCommand(email, password, ROLE.GOD, "1724567522");
 
         StepVerifier.create(useCase.execute(command))
                 .consumeNextWith(response -> {

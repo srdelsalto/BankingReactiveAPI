@@ -1,6 +1,7 @@
 package ec.com.sofka.router;
 
 import ec.com.sofka.dto.AdminRequestDTO;
+import ec.com.sofka.dto.LoginRequestDTO;
 import ec.com.sofka.exception.ErrorResponse;
 import ec.com.sofka.handler.AdminHandler;
 import ec.com.sofka.usecases.responses.AdminResponse;
@@ -84,7 +85,7 @@ public class AdminRouter {
                                     required = true,
                                     content = @Content(
                                             mediaType = "application/json",
-                                            schema = @Schema(implementation = AdminRequestDTO.class)
+                                            schema = @Schema(implementation = LoginRequestDTO.class)
                                     )
                             ),
                             responses = {
